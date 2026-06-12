@@ -1,0 +1,31 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+dist/
+build/
+*.egg-info/
+
+# Data (raw scraped content)
+data/raw/
+data/processed/*
+data/chroma_db/
+data/bm25_index.pkl
+
+# Keep processed samples
+!data/processed/samples/
+
+# Evaluation outputs (commit results, not intermediates)
+evaluation/results/tmp/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# OS
+.DS_Store
+
+#
+.venv/

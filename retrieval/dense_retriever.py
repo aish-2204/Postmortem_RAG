@@ -14,14 +14,12 @@ load_dotenv()
 
 
 class DenseRetriever:
-    def __init__(self, client=None, openai_client=None):
-        import chromadb
+    def __init__(self, client=None):
         from indexing.chroma_store import get_chunks_collection, get_client
         from indexing.embedder import get_query_embedding
 
         self._get_embedding = get_query_embedding
         self._col = get_chunks_collection(client or get_client())
-        self._openai = openai_client
 
     def retrieve(
         self,
@@ -33,7 +31,7 @@ class DenseRetriever:
         Returns top_k results: [{"chunk_id", "text", "metadata", "score"}]
         score is cosine distance converted to similarity (1 - distance).
         """
-        embedding = self._get_embedding(query, client=self._openai)
+        embedding = self._get_embedding(query)
 
         where = _build_where(metadata_filter) if metadata_filter else None
         query_kwargs: dict[str, Any] = {

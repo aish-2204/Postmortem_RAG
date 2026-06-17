@@ -120,10 +120,15 @@ def upsert_chunks(
 
 
 def fetch_parent(parent_id: str, client: chromadb.ClientAPI | None = None) -> dict | None:
-    """Fetch a parent document by its doc ID for context assembly."""
+    """Fetch a parent document by its doc ID for context assembly.
+    Parent chunks are stored with chunk_id = '{doc_id}__parent', so we try
+    both forms to be safe.
+    """
     c = client or get_client()
     col = get_parents_collection(c)
-    result = col.get(ids=[parent_id], include=["documents", "metadatas"])
+    # Parent chunks are stored with the __parent suffix on their chunk_id
+    lookup_id = parent_id if parent_id.endswith("__parent") else f"{parent_id}__parent"
+    result = col.get(ids=[lookup_id], include=["documents", "metadatas"])
     if not result["ids"]:
         return None
     return {

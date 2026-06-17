@@ -14,6 +14,7 @@ dependencies = [
     "lxml>=4.9.0",
     "trafilatura>=1.10.0",
     # Embeddings + LLMs
+    "google-generativeai>=0.8.0",
     "openai>=1.30.0",
     "anthropic>=0.28.0",
     "tiktoken>=0.7.0",

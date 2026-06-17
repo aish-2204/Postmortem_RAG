@@ -1,79 +1,99 @@
 """
-Batch embedding with retry, rate-limit handling, and cost tracking.
+Batch embedding with rate-limit handling and cost tracking.
 
-Uses OpenAI text-embedding-3-small: 1536-dim, $0.02/1M tokens.
-At ~300 chars/chunk avg: 200 docs × 6 chunks × 75 tokens ≈ 90k tokens ≈ $0.002 total.
+Uses Google gemini-embedding-001: 3072-dim, free tier.
+Free tier limits: 100 RPM, 30K TPM, 1K RPD.
+
+Rate limit math:
+  batch_size=20, avg ~400 tokens/chunk → ~8K tokens per API call
+  30K TPM ÷ 8K = 3.75 calls/minute → sleep 15s between calls to stay safe
+  1200 chunks ÷ 20 = 60 calls total → ~15 min for a full index run
 """
 
 import os
 import time
-from typing import Any
 
 from dotenv import load_dotenv
-from openai import OpenAI, RateLimitError
-from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_exponential
+from google import genai
+from google.genai import errors as genai_errors
+from google.genai import types
 
 load_dotenv()
 
-_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
-_BATCH_SIZE = int(os.getenv("EMBEDDING_BATCH_SIZE", "100"))
-_DIMS = 1536  # text-embedding-3-small dimensions
+_MODEL = os.getenv("EMBEDDING_MODEL", "models/gemini-embedding-001")
+_BATCH_SIZE = int(os.getenv("EMBEDDING_BATCH_SIZE", "20"))
+_DIMS = 3072
+_BETWEEN_BATCH_SLEEP = 15   # seconds between API calls to respect 30K TPM
+_RATE_LIMIT_WAIT = 60        # seconds to wait on 429 before retry
 
 
-@retry(
-    retry=retry_if_exception_type(RateLimitError),
-    stop=stop_after_attempt(5),
-    wait=wait_exponential(multiplier=2, min=4, max=60),
-)
-def _embed_batch(client: OpenAI, texts: list[str]) -> list[list[float]]:
-    response = client.embeddings.create(model=_MODEL, input=texts)
-    return [item.embedding for item in sorted(response.data, key=lambda x: x.index)]
+def _get_client() -> genai.Client:
+    return genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+
+
+def _embed_batch_with_retry(
+    client: genai.Client,
+    texts: list[str],
+    task_type: str,
+    max_retries: int = 5,
+) -> list[list[float]]:
+    """Call the Gemini embedding API with manual retry on rate limit (429)."""
+    for attempt in range(max_retries):
+        try:
+            result = client.models.embed_content(
+                model=_MODEL,
+                contents=texts,
+                config=types.EmbedContentConfig(task_type=task_type),
+            )
+            return [e.values for e in result.embeddings]
+        except genai_errors.ClientError as e:
+            if e.code == 429:
+                wait = _RATE_LIMIT_WAIT * (attempt + 1)
+                print(f"\n  Rate limited (429). Waiting {wait}s before retry {attempt + 1}/{max_retries}…")
+                time.sleep(wait)
+            else:
+                raise
+    raise RuntimeError(f"Embedding failed after {max_retries} retries on rate limit.")
 
 
 def embed_texts(
     texts: list[str],
-    client: OpenAI | None = None,
+    task_type: str = "RETRIEVAL_DOCUMENT",
     show_progress: bool = True,
 ) -> list[list[float]]:
     """
-    Embed a list of texts in batches. Returns embeddings in same order as input.
-    Tracks token usage and prints cost estimate.
+    Embed a list of texts in batches. Returns embeddings in the same order as input.
+    Sleeps between batches to stay within TPM limits.
     """
-    if client is None:
-        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
+    client = _get_client()
     all_embeddings: list[list[float]] = []
     total_batches = (len(texts) + _BATCH_SIZE - 1) // _BATCH_SIZE
-    total_chars = sum(len(t) for t in texts)
 
     if show_progress:
-        estimated_tokens = total_chars // 4
-        estimated_cost = estimated_tokens / 1_000_000 * 0.02
-        print(f"Embedding {len(texts)} texts (~{estimated_tokens:,} tokens, ~${estimated_cost:.4f})")
+        print(f"  Embedding {len(texts)} chunks | {total_batches} API calls | ~{total_batches * _BETWEEN_BATCH_SLEEP}s")
 
     for i in range(0, len(texts), _BATCH_SIZE):
         batch = texts[i : i + _BATCH_SIZE]
         batch_num = i // _BATCH_SIZE + 1
 
         if show_progress:
-            print(f"  Batch {batch_num}/{total_batches} ({len(batch)} texts)…", end="\r")
+            print(f"  [{batch_num}/{total_batches}] {len(batch)} texts…", end=" ", flush=True)
 
-        embeddings = _embed_batch(client, batch)
+        embeddings = _embed_batch_with_retry(client, batch, task_type)
         all_embeddings.extend(embeddings)
 
-        # Small delay to stay under TPM limits
-        if batch_num < total_batches:
-            time.sleep(0.1)
+        if show_progress:
+            print("done")
 
-    if show_progress:
-        print(f"  Embedding complete: {len(all_embeddings)} vectors ({_DIMS}d)")
+        # Respect TPM limit — sleep between every batch except the last
+        if batch_num < total_batches:
+            time.sleep(_BETWEEN_BATCH_SLEEP)
 
     return all_embeddings
 
 
-def get_query_embedding(text: str, client: OpenAI | None = None) -> list[float]:
-    """Single-text embedding for query time — no batching overhead."""
-    if client is None:
-        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-    result = _embed_batch(client, [text])
+def get_query_embedding(text: str) -> list[float]:
+    """Single-text embedding for query time — uses RETRIEVAL_QUERY task_type."""
+    client = _get_client()
+    result = _embed_batch_with_retry(client, [text], task_type="RETRIEVAL_QUERY")
     return result[0]

@@ -1,0 +1,2402 @@
+[
+  {
+    "question": "What specific mechanism caused the secondary network traffic to trigger a re-mirroring storm and subsequent control plane thread exhaustion?",
+    "ground_truth": "A network configuration change incorrectly routed traffic to a lower-capacity secondary network, causing EBS node isolation and a subsequent re-mirroring storm that exhausted cluster capacity and control plane threads.",
+    "source_doc_id": "amazon_2011_04_29",
+    "company": "Amazon",
+    "date": "2011-04-29",
+    "failure_category": "network",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "amazon_2011_04_29__root_cause"
+    ]
+  },
+  {
+    "question": "What architectural improvements and recovery capabilities can be implemented to enhance the isolation and availability of the EC2 control plane and EBS volumes?",
+    "ground_truth": "- Add redundancy and isolation for PLCs - Implement better load balancing for EC2 API management hosts - Develop further isolation of EC2 control plane components - Create capability to recover EBS volumes directly on servers - Instrument alarms for snapshot cleanup identification process - Add holding state for blocks flagged for deletion - Improve RDS health checks and fix failover software bugs",
+    "source_doc_id": "amazon_2011_08_07",
+    "company": "Amazon",
+    "date": "2011-08-07",
+    "failure_category": "compute",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "amazon_2011_08_07__remediation"
+    ]
+  },
+  {
+    "question": "How can we implement automated data reconciliation and restrict production access to ensure system resilience and rapid recovery during configuration-related failures?",
+    "ground_truth": "- Persistent developer access to production data is a high-risk configuration. - Data recovery processes must be tested and optimized for speed. - Service architecture should be resilient to logical data loss through automated reconciliation.",
+    "source_doc_id": "amazon_2012_12_24",
+    "company": "Amazon",
+    "date": "2012-12-24",
+    "failure_category": "config",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "amazon_2012_12_24__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific mechanism or safeguard failed to prevent an authorized engineer's input from removing more servers than intended during the command-line operation?",
+    "ground_truth": "An authorized engineer entered an incorrect input into a command-line tool, causing the removal of more S3 servers than intended, which forced a full restart of critical index and placement subsystems.",
+    "source_doc_id": "amazon_2017_02_28",
+    "company": "Amazon",
+    "date": "2017-02-28",
+    "failure_category": "config",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "amazon_2017_02_28__root_cause"
+    ]
+  },
+  {
+    "question": "What safety controls and validation protocols should be implemented to prevent accidental bulk server removal?",
+    "ground_truth": "- Review and improve command-line safety procedures - Implement stricter validation for bulk server removal commands",
+    "source_doc_id": "amazon_2017_06_05",
+    "company": "Amazon",
+    "date": "2017-06-05",
+    "failure_category": "compute",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "amazon_2017_06_05__remediation"
+    ]
+  },
+  {
+    "question": "How can we redesign our service architecture and scaling policies to prevent cascading failures and ensure availability during capacity-constrained outages?",
+    "ground_truth": "- Scaling limits can be reached by OS-level thread constraints when fleet size increases - Service dependencies (like Cognito for the status dashboard) can create circular dependencies during outages - Cellularization is critical for isolating failure domains - Buffering mechanisms must be resilient to downstream service unavailability to prevent cascading failures",
+    "source_doc_id": "amazon_2020_11_25",
+    "company": "Amazon",
+    "date": "2020-11-25",
+    "failure_category": "capacity",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "amazon_2020_11_25__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific mechanism within the DynamoDB DNS management system allowed the race condition to produce an incorrect empty DNS record?",
+    "ground_truth": "A latent race condition in the DynamoDB DNS management system caused an incorrect empty DNS record, triggering a cascading failure across dependent AWS services including EC2 instance launches and network propagation.",
+    "source_doc_id": "amazon_2025_10_19",
+    "company": "Amazon",
+    "date": "2025-10-19",
+    "failure_category": "dependency",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "amazon_2025_10_19__root_cause"
+    ]
+  },
+  {
+    "question": "What improvements should be made to validation and deployment systems to prevent configuration-related incidents and accelerate recovery to known good states?",
+    "ground_truth": "- Update validation systems to wait for deferred deletion time windows before approving data changes - Implement a second tier of validation systems that test data changes under production traffic conditions - Expand test coverage for rarely changed data models - Re-engineer recovery processes for faster return to known good states - Enhance deployment systems to support global scale operations",
+    "source_doc_id": "appnexus_2013_09_17",
+    "company": "AppNexus",
+    "date": "2013-09-17",
+    "failure_category": "config",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "appnexus_2013_09_17__remediation"
+    ]
+  },
+  {
+    "question": "How can we implement automated validation and circuit-breaking mechanisms to prevent corrupted data from causing cascading network failures?",
+    "ground_truth": "- Hardware malfunctions can bypass software-level checksum protections if memory tables are not continuously validated. - Network-wide outages require a centralized or automated 'kill switch' or alarm system to prevent resource exhaustion. - Routing protocols must be resilient to sequence number cycles caused by corrupted data.",
+    "source_doc_id": "arpanet_1980_10_27",
+    "company": "ARPANET",
+    "date": "1980-10-27",
+    "failure_category": "network",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "arpanet_1980_10_27__lessons_learned"
+    ]
+  },
+  {
+    "question": "Why did the maintenance script use customer site IDs instead of the intended app IDs during the deletion process?",
+    "ground_truth": "A maintenance script intended to delete a legacy app incorrectly used customer site IDs instead of app IDs, resulting in the accidental deletion of 883 customer sites.",
+    "source_doc_id": "atlassian_2022_04_05",
+    "company": "Atlassian",
+    "date": "2022-04-05",
+    "failure_category": "config",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "atlassian_2022_04_05__root_cause"
+    ]
+  },
+  {
+    "question": "What specific technical failure is identified as the root cause of the incident?",
+    "ground_truth": "The provided text is a curated list of post-mortem resources and does not describe a specific production incident.",
+    "source_doc_id": "awesome_github_com_snakescott_awesome_",
+    "company": "Awesome",
+    "date": null,
+    "failure_category": "unknown",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "awesome_github_com_snakescott_awesome___root_cause"
+    ]
+  },
+  {
+    "question": "How can we validate our disaster recovery procedures and infrastructure redundancy to ensure that localized failures and latent software bugs do not compromise service availability?",
+    "ground_truth": "- Running applications across multiple Availability Zones is critical for maintaining availability during localized infrastructure failures - Latent bugs in recovery software can significantly delay restoration times - Continuous testing of recovery workflows on long-running hosts is necessary to identify configuration issues",
+    "source_doc_id": "aws_2012_06_04",
+    "company": "AWS",
+    "date": "2012-06-04",
+    "failure_category": "compute",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "aws_2012_06_04__lessons_learned"
+    ]
+  },
+  {
+    "question": "What technical failure sequence caused the lock service to trigger cascading node removals during the storage node outage?",
+    "ground_truth": "A power loss caused multiple storage nodes to fail simultaneously, triggering a load spike on the lock service that caused handshake timeouts and subsequent cascading removal of nodes from the cluster.",
+    "source_doc_id": "aws_2012_06_13",
+    "company": "AWS",
+    "date": "2012-06-13",
+    "failure_category": "database",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "aws_2012_06_13__root_cause"
+    ]
+  },
+  {
+    "question": "What steps should be taken to improve the reliability and recovery time of power systems and server boot processes during a compute infrastructure failure?",
+    "ground_truth": "- Repair, recertify, or replace failed generators and electrical switching equipment. - Lengthen the time allowed for generators to reach stable power before load transfer. - Expand power quality tolerances for generator switching. - Increase onsite 24x7 engineering staff for manual intervention. - Remove bottlenecks in the server booting process. - Automate the failover process for EC2 and EBS control plane datastores. - Break ELB processing into multiple queues to improve throughput. - Develop backup DNS re-weighting for rapid traffic shifting. - Roll out a fix for the Multi-AZ RDS failover bug.",
+    "source_doc_id": "aws_2012_06_29",
+    "company": "AWS",
+    "date": "2012-06-29",
+    "failure_category": "compute",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "aws_2012_06_29__remediation"
+    ]
+  },
+  {
+    "question": "How can we improve our incident response and system architecture to ensure that resource recovery, granular monitoring, and failure-resilient distributed design are prioritized over broad throttling mechanisms?",
+    "ground_truth": "- Aggressive throttling can disproportionately impact customers and hinder recovery efforts - Monitoring aggregate memory usage is insufficient for detecting process-specific leaks - DNS propagation failures can trigger latent bugs in distributed systems - Resource dependencies (like EIPs) must be accounted for in recovery workflows",
+    "source_doc_id": "aws_2012_10_22",
+    "company": "AWS",
+    "date": "2012-10-22",
+    "failure_category": "storage",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "aws_2012_10_22__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific sequence of mechanical, electrical, and automated control failures caused the backup generators to trip and fail during the utility power loss?",
+    "ground_truth": "A utility power failure triggered a cascading failure of backup generators due to a breaker trip, a mechanical failure, and a malfunctioning automated control system, followed by a network misconfiguration during recovery.",
+    "source_doc_id": "aws_2013_12_17",
+    "company": "AWS",
+    "date": "2013-12-17",
+    "failure_category": "compute",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "aws_2013_12_17__root_cause"
+    ]
+  },
+  {
+    "question": "What specific architectural changes and monitoring improvements were implemented to stabilize the metadata service during capacity-related incidents?",
+    "ground_truth": "- Increased capacity of the metadata service - Instrumented stricter monitoring on membership size - Reduced rate of membership data requests from storage nodes - Lengthened time allowed to process membership queries - Segmenting DynamoDB metadata service into multiple instances - Adjusted SQS metadata caching strategy - Improved parallelism and capacity for Auto Scaling job processing - Implemented faster metrics delivery via write-through caching in CloudWatch - Reduced API timeouts in AWS Console login",
+    "source_doc_id": "aws_2015_09_20",
+    "company": "AWS",
+    "date": "2015-09-20",
+    "failure_category": "capacity",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "aws_2015_09_20__remediation"
+    ]
+  },
+  {
+    "question": "How can we implement automated semantic validation and rate-limited deployment strategies to ensure configuration changes do not cause sudden capacity-based service failures?",
+    "ground_truth": "- Configuration updates require semantic validation to prevent invalid parameters - Capacity reduction should be throttled to prevent rapid service degradation during misconfigurations",
+    "source_doc_id": "aws_2018_11_22",
+    "company": "AWS",
+    "date": "2018-11-22",
+    "failure_category": "config",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "aws_2018_11_22__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific mechanism in the third-party datacenter control system caused the excessive communication during failover that led to the cooling system failure?",
+    "ground_truth": "A bug in third-party datacenter control system logic caused excessive communication during a failover, leading to system unresponsiveness and subsequent failure of cooling systems, resulting in server overheating and shutdown.",
+    "source_doc_id": "aws_2019_08_23",
+    "company": "AWS",
+    "date": "2019-08-23",
+    "failure_category": "compute",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "aws_2019_08_23__root_cause"
+    ]
+  },
+  {
+    "question": "What specific actions were taken to mitigate the impact of the problematic network protocol and prevent its recurrence in other regions?",
+    "ground_truth": "- Disabled the new protocol in the Tokyo region. - Developed enhanced detection and remediation methods for the specific packet signature. - Planned careful application of changes to other AWS regions.",
+    "source_doc_id": "aws_2021_09_02",
+    "company": "AWS",
+    "date": "2021-09-02",
+    "failure_category": "network",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "aws_2021_09_02__remediation"
+    ]
+  },
+  {
+    "question": "How can we enhance the resilience of our internal monitoring, communication, and traffic management systems to ensure operational visibility and stability during a large-scale network congestion event?",
+    "ground_truth": "- Internal monitoring and deployment systems must be resilient to network congestion - Client back-off behaviors need to be robust against unobserved traffic patterns - Service Health Dashboard and support systems require multi-region redundancy - Communication strategies during global outages need to be more granular",
+    "source_doc_id": "aws_2021_12_07",
+    "company": "AWS",
+    "date": "2021-12-07",
+    "failure_category": "network",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "aws_2021_12_07__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific condition within the Lambda Frontend caused the fleet to fail to fully utilize allocated Execution Environments when reaching unprecedented capacity thresholds?",
+    "ground_truth": "A latent software defect in the Lambda Frontend was triggered when the fleet scaled to an unprecedented capacity threshold within a single cell. This caused Lambda Execution Environments to be successfully allocated but never fully utilized, leading to increased error rates and latencies for function invocations.",
+    "source_doc_id": "aws_2023_06_13",
+    "company": "AWS",
+    "date": "2023-06-13",
+    "failure_category": "compute",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "aws_2023_06_13__root_cause"
+    ]
+  },
+  {
+    "question": "What specific technical adjustments were implemented to improve capacity, load shedding, and connection management for the Kinesis data plane?",
+    "ground_truth": "- Increased capacity to provision data plane connections - Operationalized additional tooling to shed load - Changed connection limits - Applied configuration changes to all other AWS Regions with the new Kinesis architecture",
+    "source_doc_id": "aws_2024_07_30",
+    "company": "AWS",
+    "date": "2024-07-30",
+    "failure_category": "compute",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "aws_2024_07_30__remediation"
+    ]
+  },
+  {
+    "question": "What was the specific technical root cause of the service disruption that affected Amazon DynamoDB in the US-EAST-1 region?",
+    "ground_truth": "A service disruption occurred in the Northern Virginia (US-EAST-1) region affecting Amazon DynamoDB.",
+    "source_doc_id": "aws_2025_10_19",
+    "company": "AWS",
+    "date": "2025-10-19",
+    "failure_category": "database",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "aws_2025_10_19__root_cause"
+    ]
+  },
+  {
+    "question": "Which specific network traffic patterns and amplification techniques contributed to the 20Gbps DDoS attack that forced the service into quarantine?",
+    "ground_truth": "A massive DDoS attack exceeding 20Gbps, utilizing SYN flood, DNS reflection, ICMP flooding, and NTP amplification, caused service unavailability and network quarantine.",
+    "source_doc_id": "basecamp_2014_03_24",
+    "company": "Basecamp",
+    "date": "2014-03-24",
+    "failure_category": "network",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "basecamp_2014_03_24__root_cause"
+    ]
+  },
+  {
+    "question": "What actions should be taken with network providers and law enforcement to mitigate and respond to a network-based attack?",
+    "ground_truth": "- Collaborated with network providers to mitigate traffic - Collaborating with law enforcement and other victims - Maintaining high alert status",
+    "source_doc_id": "basecamp_2021_04_26",
+    "company": "Basecamp",
+    "date": "2021-04-26",
+    "failure_category": "network",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "basecamp_2021_04_26__remediation"
+    ]
+  },
+  {
+    "question": "What proactive measures should be implemented to ensure database schema capacity planning and framework updates are prioritized before technical limits are reached?",
+    "ground_truth": "- Need to be more vigilant with database schema capacity planning - Should have adopted updated framework defaults for database column types sooner - Capacity planning for high-traffic tables must be prioritized and completed before limits are reached",
+    "source_doc_id": "basecamp_2023_11_09",
+    "company": "Basecamp",
+    "date": "2023-11-09",
+    "failure_category": "database",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "basecamp_2023_11_09__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific data type configuration caused the database column to overflow and exhaust the available ID range?",
+    "ground_truth": "The application ran out of available ID numbers in a database table because a column was configured as a standard integer instead of a big integer, causing an overflow.",
+    "source_doc_id": "basecamp_m_signalvnoise_com_update_on_b",
+    "company": "Basecamp",
+    "date": null,
+    "failure_category": "database",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "basecamp_m_signalvnoise_com_update_on_b__root_cause"
+    ]
+  },
+  {
+    "question": "What are the specific recovery and mitigation steps required to resolve a database-related service interruption?",
+    "ground_truth": "- Restore caching layer - Perform remedial work on metadata service - Conduct forensics to identify root cause - Implement measures to minimize future interruptions",
+    "source_doc_id": "bbc_2014_07_19",
+    "company": "BBC",
+    "date": "2014-07-19",
+    "failure_category": "database",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "bbc_2014_07_19__remediation"
+    ]
+  },
+  {
+    "question": "What architectural improvements can be implemented to ensure host-to-host interface stability and graceful handling of incoming character streams?",
+    "ground_truth": "- Initial network communication tests are prone to software bugs in host-to-host interfaces - System stability requires robust handling of incoming character streams",
+    "source_doc_id": "bbn_1969_10_29",
+    "company": "BBN",
+    "date": "1969-10-29",
+    "failure_category": "compute",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "bbn_1969_10_29__lessons_learned"
+    ]
+  },
+  {
+    "question": "How did the compromise of an unpatched legacy server lead to unauthorized access to production database backups?",
+    "ground_truth": "An unpatched, inactive legacy prototype server was compromised via the Shellshock vulnerability, allowing the attacker to obtain AWS API keys and access production database backups.",
+    "source_doc_id": "browserstack_2014_11_09",
+    "company": "BrowserStack",
+    "date": "2014-11-09",
+    "failure_category": "config",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "browserstack_2014_11_09__root_cause"
+    ]
+  },
+  {
+    "question": "What architectural changes should be implemented to decouple service availability from database health and external API dependencies during an incident?",
+    "ground_truth": "- Upgraded RDS instance to handle load - Removed centralized pgbouncer and reverted to per-host pooling - Modified health check endpoints to exclude database connectivity checks - Changed server self-deployment mechanism to use S3 instead of a live API endpoint - Updated PagerDuty and on-call notification settings",
+    "source_doc_id": "buildkite_2016_08_22",
+    "company": "Buildkite",
+    "date": "2016-08-22",
+    "failure_category": "database",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "buildkite_2016_08_22__remediation"
+    ]
+  },
+  {
+    "question": "How can deployment and installation procedures be updated to prevent conflicts with critical operating system files and ensure cross-platform compatibility?",
+    "ground_truth": "- Review all filenames to ensure no conflicts with OS system files - Improve testing procedures to include diverse hardware and OS configurations - Installer scripting languages require more rigorous code review due to complexity - Avoid using filenames that conflict with critical system files",
+    "source_doc_id": "ccp_games_2007_12_05",
+    "company": "CCP Games",
+    "date": "2007-12-05",
+    "failure_category": "config",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "ccp_games_2007_12_05__lessons_learned"
+    ]
+  },
+  {
+    "question": "Which specific logging channel caused the performance degradation and cluster instability within the sovereignty campaign system?",
+    "ground_truth": "A specific logging channel used by the sovereignty campaign system caused extreme performance degradation and node timeouts when under load, leading to cluster instability.",
+    "source_doc_id": "ccp_games_2015_07_15",
+    "company": "CCP Games",
+    "date": "2015-07-15",
+    "failure_category": "compute",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "ccp_games_2015_07_15__root_cause"
+    ]
+  },
+  {
+    "question": "Where should Py_DECREF calls be relocated to prevent the premature recycling of channel objects?",
+    "ground_truth": "- Moved Py_DECREF calls into the SleepWallclock function to ensure channel objects are not recycled prematurely.",
+    "source_doc_id": "ccp_games_community_eveonline_com_news_d",
+    "company": "CCP Games",
+    "date": null,
+    "failure_category": "compute",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "ccp_games_community_eveonline_com_news_d__remediation"
+    ]
+  },
+  {
+    "question": "How can we integrate load testing and health check configuration reviews into our deployment process to prevent capacity-related outages during traffic spikes?",
+    "ground_truth": "- Load planning is critical and should not be skipped during launch haste - Health check timeouts must be tuned to prevent domino effects during traffic spikes - Application server sizing must be validated against expected traffic demand",
+    "source_doc_id": "chef_www_chef_io_blog_2014_07_10_su",
+    "company": "Chef",
+    "date": null,
+    "failure_category": "capacity",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "chef_www_chef_io_blog_2014_07_10_su__lessons_learned"
+    ]
+  },
+  {
+    "question": "What was the primary technical trigger that led to the cascading failures in the build scheduling and dispatching systems?",
+    "ground_truth": "Excessive database load caused a backlog of queued operations, which triggered cascading failures in the build scheduling and dispatching systems.",
+    "source_doc_id": "circleci_2016_09_07",
+    "company": "CircleCI",
+    "date": "2016-09-07",
+    "failure_category": "database",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "circleci_2016_09_07__root_cause"
+    ]
+  },
+  {
+    "question": "What specific configuration changes and hardware adjustments can be implemented to mitigate database performance degradation caused by inefficient index creation and memory management?",
+    "ground_truth": "- Removed unnecessary index creation logic from application startup - Increased MongoDB hardware capacity (memory and disk) - Applied TCMalloc tuning parameters (tcmallocEnableMarkThreadIdle=false, TCMALLOC_AGGRESSIVE_DECOMMIT=y) - Implemented failover procedures for degraded MongoDB hosts - Optimized application-level data access patterns - Enhanced observability with Datadog and Honeycomb.io",
+    "source_doc_id": "circleci_2019_03_26",
+    "company": "CircleCI",
+    "date": "2019-03-26",
+    "failure_category": "database",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "circleci_2019_03_26__remediation"
+    ]
+  },
+  {
+    "question": "How can we refine our system architecture and operational practices to prevent cascading failures and resource exhaustion during service outages?",
+    "ground_truth": "- Documentation for third-party software may be inaccurate regarding scope of changes - Coupling between services can lead to cascading failures - Alerting configurations must account for trends rather than just static thresholds - Automated retries can exacerbate resource exhaustion during outages",
+    "source_doc_id": "circleci_2021_05_21",
+    "company": "CircleCI",
+    "date": "2021-05-21",
+    "failure_category": "messaging",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "circleci_2021_05_21__lessons_learned"
+    ]
+  },
+  {
+    "question": "How did the non-backwards compatible database schema change and the subsequent rollback result in unreadable data that blocked job distribution?",
+    "ground_truth": "A non-backwards compatible database schema change caused the distribution service to fail when processing data, and the subsequent rollback created unreadable data that continued to block job distribution.",
+    "source_doc_id": "circleci_2021_11_08",
+    "company": "CircleCI",
+    "date": "2021-11-08",
+    "failure_category": "config",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "circleci_2021_11_08__root_cause"
+    ]
+  },
+  {
+    "question": "What specific categories of credentials and infrastructure components must be rotated or revoked to remediate a widespread unauthorized access incident?",
+    "ground_truth": "- Rotated all GitHub OAuth tokens - Revoked all Project API Tokens - Revoked all Personal API Tokens - Rotated all Bitbucket tokens - Rotated all production hosts - Implemented additional MDM and A/V detection - Restricted production access and added step-up authentication",
+    "source_doc_id": "circleci_2023_01_04",
+    "company": "CircleCI",
+    "date": "2023-01-04",
+    "failure_category": "security",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "circleci_2023_01_04__remediation"
+    ]
+  },
+  {
+    "question": "What procedural changes can be implemented to ensure database statistics are accurately refreshed and validated following major version upgrades?",
+    "ground_truth": "- Database statistics must be updated after major version upgrades to prevent performance degradation - Running analyze operations too early in a deployment sequence can lead to stale data - Automated testing and manual checkpoints are necessary to validate migrations before cutover",
+    "source_doc_id": "circleci_2025_04_03",
+    "company": "CircleCI",
+    "date": "2025-04-03",
+    "failure_category": "database",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "circleci_2025_04_03__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific configuration change performed outside of the automated infrastructure pipeline led to the service disruption?",
+    "ground_truth": "An operator manually modified a WAF rule outside of the Terraform pipeline due to overly permissive IAM controls, which inadvertently blocked legitimate traffic.",
+    "source_doc_id": "circleci_2025_04_04",
+    "company": "CircleCI",
+    "date": "2025-04-04",
+    "failure_category": "config",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "circleci_2025_04_04__root_cause"
+    ]
+  },
+  {
+    "question": "What was the underlying technical reason that resulted in the system providing marketing content instead of expected incident data?",
+    "ground_truth": "The provided text is a collection of blog post titles and marketing content, not a production incident post-mortem.",
+    "source_doc_id": "circleci_circleci_com_blog_mongohq_secu",
+    "company": "CircleCI",
+    "date": null,
+    "failure_category": "unknown",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "circleci_circleci_com_blog_mongohq_secu__root_cause"
+    ]
+  },
+  {
+    "question": "How can we implement automated load shedding or circuit breakers to prevent re-enqueueing logic from triggering cascading failures when database capacity is exceeded?",
+    "ground_truth": "- Database performance degradation can be non-linear and rapid - Live-patching via REPL is a powerful tool for emergency mitigation - Need for greater database headroom and capacity planning - Automated re-enqueueing during infrastructure failure can exacerbate cascading outages",
+    "source_doc_id": "circleci_circleci_statuspage_io_inciden",
+    "company": "CircleCI",
+    "date": null,
+    "failure_category": "database",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "circleci_circleci_statuspage_io_inciden__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific technical interaction between the Flowspec rule and the Juniper edge router firmware caused the memory exhaustion and subsequent network-wide crash?",
+    "ground_truth": "A Flowspec rule intended to drop oversized DDoS packets triggered a bug in Juniper edge routers, causing them to consume all RAM and crash network-wide.",
+    "source_doc_id": "cloudflare_2013_03_21",
+    "company": "CloudFlare",
+    "date": "2013-03-21",
+    "failure_category": "network",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "cloudflare_2013_03_21__root_cause"
+    ]
+  },
+  {
+    "question": "What specific actions were taken to patch the RRDNS software and restore service stability during the incident?",
+    "ground_truth": "- Patched RRDNS to ignore negative upstream performance values - Restarted all RRDNS servers - Inspecting all code for leap second sensitivity",
+    "source_doc_id": "cloudflare_2017_01_01",
+    "company": "Cloudflare",
+    "date": "2017-01-01",
+    "failure_category": "config",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "cloudflare_2017_01_01__remediation"
+    ]
+  },
+  {
+    "question": "What specific engineering practices and safety mechanisms can be implemented to identify and mitigate risks within legacy code modules before they are integrated into modern systems?",
+    "ground_truth": "- Legacy code modules can contain latent vulnerabilities that manifest only when integrated with newer systems - Global kill switches are essential for rapid mitigation of feature-specific bugs - Automated pointer safety checks (e.g., SAFE_CHAR) are necessary when dealing with generated C code - Proactive fuzzing of legacy modules is required to identify hidden security risks",
+    "source_doc_id": "cloudflare_2017_02_18",
+    "company": "Cloudflare",
+    "date": "2017-02-18",
+    "failure_category": "compute",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "cloudflare_2017_02_18__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific technical flaw in the WAF rule caused the global CPU exhaustion across the edge network?",
+    "ground_truth": "A poorly written regular expression in a WAF rule caused catastrophic backtracking, leading to CPU exhaustion across the global edge network.",
+    "source_doc_id": "cloudflare_2019_07_02",
+    "company": "Cloudflare",
+    "date": "2019-07-02",
+    "failure_category": "config",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "cloudflare_2019_07_02__root_cause"
+    ]
+  },
+  {
+    "question": "What specific actions were taken to mitigate the BGP routing issue and prevent future prefix-related instability?",
+    "ground_truth": "- Disabled the Atlanta router to restore traffic flow - Changed BGP local-preference for local server routes - Planned introduction of maximum-prefix limits on backbone BGP sessions",
+    "source_doc_id": "cloudflare_2020_07_17",
+    "company": "Cloudflare",
+    "date": "2020-07-17",
+    "failure_category": "config",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "cloudflare_2020_07_17__remediation"
+    ]
+  },
+  {
+    "question": "How can we design automated failover and consensus mechanisms to prevent cascading failures caused by partial network faults or split-brain scenarios?",
+    "ground_truth": "- Partial switch failures can create complex omission faults that are harder to detect than total failures - Automated failover processes can sometimes be more disruptive than the original fault if they trigger expensive recovery operations - General-purpose consensus protocols like RAFT are vulnerable to network-induced split-brain scenarios - Redundancy at every layer does not guarantee immunity to cascading failures",
+    "source_doc_id": "cloudflare_2020_11_02",
+    "company": "Cloudflare",
+    "date": "2020-11-02",
+    "failure_category": "network",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "cloudflare_2020_11_02__lessons_learned"
+    ]
+  },
+  {
+    "question": "How did the re-ordering of BGP policy terms trigger the rejection of site-local prefixes by the REJECT-THE-REST rule?",
+    "ground_truth": "A network configuration change re-ordered BGP policy terms, causing critical site-local prefixes to be rejected by a 'REJECT-THE-REST' rule, leading to prefix withdrawals.",
+    "source_doc_id": "cloudflare_2022_06_21",
+    "company": "Cloudflare",
+    "date": "2022-06-21",
+    "failure_category": "network",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "cloudflare_2022_06_21__root_cause"
+    ]
+  },
+  {
+    "question": "What specific improvements to release planning, testing, and system validation should be implemented to prevent failures caused by missing request context in Tiered Cache configurations?",
+    "ground_truth": "- Include a larger data center configured as a Tiered Cache upper tier in an earlier stage of the release plan. - Expand acceptance test coverage to include broader Tiered Cache topologies. - Implement more aggressive alerting for missing request context. - Ensure the system fails fast when critical control headers are missing.",
+    "source_doc_id": "cloudflare_2022_10_25",
+    "company": "Cloudflare",
+    "date": "2022-10-25",
+    "failure_category": "config",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "cloudflare_2022_10_25__remediation"
+    ]
+  },
+  {
+    "question": "How can we implement validation layers and architectural isolation to prevent configuration errors from causing data loss or systemic authentication failures?",
+    "ground_truth": "- Read-write transactions that redact sensitive fields can lead to data loss if the redacted value is persisted back to the database. - Empty strings are not always caught by 'not null' database constraints. - Internal services relying on the same authentication infrastructure as customers creates a blast radius that impacts internal operations.",
+    "source_doc_id": "cloudflare_2023_01_24",
+    "company": "Cloudflare",
+    "date": "2023-01-24",
+    "failure_category": "config",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "cloudflare_2023_01_24__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific resource record type caused the DNS resolver to fail and default to a stale cache?",
+    "ground_truth": "The DNS resolver failed to parse a new ZONEMD resource record in the root zone, causing it to rely on a stale cached version of the root zone until the DNSSEC signatures expired.",
+    "source_doc_id": "cloudflare_2023_10_04",
+    "company": "Cloudflare",
+    "date": "2023-10-04",
+    "failure_category": "config",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "cloudflare_2023_10_04__root_cause"
+    ]
+  },
+  {
+    "question": "What architectural requirements must be met to ensure high availability and disaster recovery for general availability products?",
+    "ground_truth": "- Remove dependencies on core data centers for control plane configuration - Require all GA products to rely on high availability clusters - Require all GA products to have a tested disaster recovery plan - Implement rigorous chaos testing including full data center removal - Audit all core data centers for compliance - Implement Code Orange process for critical incident response",
+    "source_doc_id": "cloudflare_2023_11_02",
+    "company": "Cloudflare",
+    "date": "2023-11-02",
+    "failure_category": "dependency",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "cloudflare_2023_11_02__remediation"
+    ]
+  },
+  {
+    "question": "How can we implement more robust validation and resource-constrained error handling to prevent internal configuration changes from triggering cascading system failures?",
+    "ground_truth": "- Hardening ingestion of configuration files as if they were user-generated input - Enabling more global kill switches for features - Eliminating the ability for core dumps or error reports to overwhelm system resources - Reviewing failure modes for error conditions across all core proxy modules",
+    "source_doc_id": "cloudflare_2025_11_18",
+    "company": "Cloudflare",
+    "date": "2025-11-18",
+    "failure_category": "config",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "cloudflare_2025_11_18__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific technical error within the Channel File 291 update triggered the out-of-bounds memory read that led to the system crash?",
+    "ground_truth": "A mismatch between the expected and provided input fields in a Rapid Response Content update (Channel File 291) caused an out-of-bounds memory read, resulting in a Windows system crash (BSOD).",
+    "source_doc_id": "crowdstrike_2024_07_19",
+    "company": "CrowdStrike",
+    "date": "2024-07-19",
+    "failure_category": "config",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "crowdstrike_2024_07_19__root_cause"
+    ]
+  },
+  {
+    "question": "What architectural improvements can be implemented to increase resilience against service discovery failures?",
+    "ground_truth": "- Split service discovery and dynamic configuration into separate services - Build additional layers of cache for DNS queries - Harden components to be resilient to service discovery loss - Regularly test for service discovery failure scenarios - Reduce hard dependencies for the web tier - Establish a dedicated role for external incident communication",
+    "source_doc_id": "datadog_2020_09_24",
+    "company": "Datadog",
+    "date": "2020-09-24",
+    "failure_category": "dependency",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "datadog_2020_09_24__remediation"
+    ]
+  },
+  {
+    "question": "How can we redesign our system architecture and operational procedures to maintain core functionality and transparent communication during large-scale regional failures?",
+    "ground_truth": "- Need to account for indirect coupling between autonomous regions - Establish a clear hierarchy of data importance (live vs historical) for degraded mode operations - Expand chaos testing to include large-scale infrastructure disruption scenarios - Improve customer communication regarding specific service availability during partial outages - Enhance status page capabilities to provide nuanced product-level status updates",
+    "source_doc_id": "datadog_2023_03_08",
+    "company": "Datadog",
+    "date": "2023-03-08",
+    "failure_category": "config",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "datadog_2023_03_08__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific sequence of events triggered the cascading failure across the presence, sessions, and API services after the initial CPU soft lockups occurred?",
+    "ground_truth": "A single presence server experienced CPU soft lockups, triggering a thundering herd of reconnection attempts from the sessions service that exhausted memory buffers and caused cascading failures.",
+    "source_doc_id": "discord_2017_03_20",
+    "company": "Discord",
+    "date": "2017-03-20",
+    "failure_category": "compute",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "discord_2017_03_20__root_cause"
+    ]
+  },
+  {
+    "question": "What specific technical improvements should be implemented to mitigate cascading failures and stabilize dependencies during a service disruption?",
+    "ground_truth": "- Fix known issues with Redis failover handling - Modify caching behavior for expensive API routes - Add monitoring for cascading failure signals - Update library causing node misbehavior",
+    "source_doc_id": "discord_status_discordapp_com_incident",
+    "company": "Discord",
+    "date": null,
+    "failure_category": "dependency",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "discord_status_discordapp_com_incident__remediation"
+    ]
+  },
+  {
+    "question": "How can implementing proactive request rejection and monitoring queue depth prevent cascading failures during capacity-constrained scenarios?",
+    "ground_truth": "- Unbounded request queues can lead to cascading failures by preventing database recovery. - Proactive request rejection is preferable to queuing when the system is at capacity. - Queue depth monitoring is a critical leading indicator for capacity-related outages.",
+    "source_doc_id": "duo_2018_08_29",
+    "company": "Duo",
+    "date": "2018-08-29",
+    "failure_category": "capacity",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "duo_2018_08_29__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific kernel bug triggered the host instability during the ZooKeeper patching procedure that led to the loss of quorum?",
+    "ground_truth": "A routine ZooKeeper patching procedure triggered host instability due to a runc kernel bug, leading to a loss of quorum and cascading failures across the proxy and Kibana layers.",
+    "source_doc_id": "elastic_2019_02_04",
+    "company": "Elastic",
+    "date": "2019-02-04",
+    "failure_category": "compute",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "elastic_2019_02_04__root_cause"
+    ]
+  },
+  {
+    "question": "What were the specific remediation steps required to resolve this configuration incident?",
+    "ground_truth": "- None required as this was a planned maintenance event",
+    "source_doc_id": "enom_2024_02_09",
+    "company": "enom",
+    "date": "2024-02-09",
+    "failure_category": "config",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "enom_2024_02_09__remediation"
+    ]
+  },
+  {
+    "question": "What security controls and dependency management practices can be implemented to prevent unauthorized code publication from compromised maintainer accounts?",
+    "ground_truth": "- Maintainers must enable two-factor authentication on package registry accounts - Password reuse across sites is a significant security risk - Developers should use lockfiles to prevent auto-installation of malicious dependency updates - Limit the number of individuals with publishing access to critical packages",
+    "source_doc_id": "eslint_2018_07_12",
+    "company": "ESLint",
+    "date": "2018-07-12",
+    "failure_category": "dependency",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "eslint_2018_07_12__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific data type conversion error caused the inertial guidance system to crash during flight?",
+    "ground_truth": "An arithmetic overflow occurred when a 64-bit floating point value was converted to a 16-bit signed integer, causing the inertial guidance computers to crash due to the rocket's higher acceleration compared to the previous model.",
+    "source_doc_id": "european_space_agenc_1996_06_04",
+    "company": "European Space Agency",
+    "date": "1996-06-04",
+    "failure_category": "compute",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "european_space_agenc_1996_06_04__root_cause"
+    ]
+  },
+  {
+    "question": "What steps should be taken to restore connectivity and services when the backbone network fails?",
+    "ground_truth": "- Dispatch engineers to physical data centers for manual intervention - Restore backbone network connectivity - Incrementally restore services to manage power and traffic load",
+    "source_doc_id": "facebook_2021_10_04",
+    "company": "Facebook",
+    "date": "2021-10-04",
+    "failure_category": "network",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "facebook_2021_10_04__remediation"
+    ]
+  },
+  {
+    "question": "What specific configuration change triggered the cascading failure that resulted in the loss of BGP and DNS connectivity?",
+    "ground_truth": "A configuration change caused a cascading failure that resulted in the loss of BGP and DNS connectivity.",
+    "source_doc_id": "facebook_2021_10_06",
+    "company": "Facebook",
+    "date": "2021-10-06",
+    "failure_category": "config",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "facebook_2021_10_06__root_cause"
+    ]
+  },
+  {
+    "question": "What specific combination of a prior software deployment and a customer configuration change triggered the global service disruption?",
+    "ground_truth": "A software bug introduced in a previous deployment was triggered by a valid customer configuration change, causing widespread service disruption.",
+    "source_doc_id": "fastly_2021_06_08",
+    "company": "Fastly",
+    "date": "2021-06-08",
+    "failure_category": "config",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "fastly_2021_06_08__root_cause"
+    ]
+  },
+  {
+    "question": "What regulatory, operational, and maintenance improvements were implemented to prevent future grid instability?",
+    "ground_truth": "- Mandatory reliability standards established via Energy Policy Act of 2005 - Improved tree trimming and right-of-way maintenance - Upgraded energy management system software - Enhanced real-time diagnostic support and operator training",
+    "source_doc_id": "firstenergy_2003_08_14",
+    "company": "FirstEnergy",
+    "date": "2003-08-14",
+    "failure_category": "compute",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "firstenergy_2003_08_14__remediation"
+    ]
+  },
+  {
+    "question": "What architectural and operational changes can be implemented to ensure that system capacity scales proactively rather than reactively?",
+    "ground_truth": "- Predictable growth requires proactive capacity planning and monitoring. - Monitoring should be prioritized early in a startup's lifecycle. - Relying on a single database shard or limited redundancy is a high-risk architecture. - Transparency in post-mortems improves community trust.",
+    "source_doc_id": "foursquare_2010_09_23",
+    "company": "foursquare",
+    "date": "2010-09-23",
+    "failure_category": "capacity",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "foursquare_2010_09_23__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific authentication vulnerability allowed the attacker to gain unauthorized access to the GitHub organization administrator account?",
+    "ground_truth": "An attacker gained unauthorized access to a Gentoo GitHub organization administrator account via credential stuffing/password reuse.",
+    "source_doc_id": "gentoo_2018_06_28",
+    "company": "Gentoo",
+    "date": "2018-06-28",
+    "failure_category": "config",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "gentoo_2018_06_28__root_cause"
+    ]
+  },
+  {
+    "question": "What specific configuration changes were implemented in Pacemaker to prevent automated database role changes during an outage?",
+    "ground_truth": "- Disabled automated failover for the primary database - Configured Pacemaker to require manual intervention for database role changes - Investigating InnoDB buffer pool warming strategies - Auditing Pacemaker and Heartbeat code paths - Upgraded status site database to production-grade",
+    "source_doc_id": "github_2012_09_11",
+    "company": "GitHub",
+    "date": "2012-09-11",
+    "failure_category": "database",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "github_2012_09_11__remediation"
+    ]
+  },
+  {
+    "question": "How can we improve our incident response preparedness and network reliability to prevent similar cascading failures in the future?",
+    "ground_truth": "- Avoid tunnel-vision during incident response by considering multiple root causes - Engage vendor support at the first sign of trouble - Need for a staging environment that mirrors production network topology - Conduct scheduled incident response exercises",
+    "source_doc_id": "github_2012_11_30",
+    "company": "GitHub",
+    "date": "2012-11-30",
+    "failure_category": "network",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "github_2012_11_30__lessons_learned"
+    ]
+  },
+  {
+    "question": "What sequence of events caused the MLAG failover to trigger a network freeze and subsequent split-brain scenario in the HA clusters?",
+    "ground_truth": "A network switch agent termination during forensic data collection triggered an unintended disruptive MLAG failover, causing a network freeze that led to split-brain scenarios in the fileserver HA clusters.",
+    "source_doc_id": "github_2012_12_22",
+    "company": "GitHub",
+    "date": "2012-12-22",
+    "failure_category": "network",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "github_2012_12_22__root_cause"
+    ]
+  },
+  {
+    "question": "What specific technical and procedural improvements should be implemented to mitigate widespread compute failures caused by hardware dependencies and service degradation?",
+    "ground_truth": "- Update server firmware across the fleet to resolve disk recognition issues. - Update application test suite to ensure processes start without external dependencies. - Improve circuit breakers for graceful degradation. - Review availability requirements for internal provisioning systems. - Strengthen cross-team communication and predefine escalation strategies.",
+    "source_doc_id": "github_2016_01_28",
+    "company": "GitHub",
+    "date": "2016-01-28",
+    "failure_category": "compute",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "github_2016_01_28__remediation"
+    ]
+  },
+  {
+    "question": "How can we modify our disaster recovery architecture and communication protocols to mitigate the risks associated with long-duration data restoration and unreliable replication failover?",
+    "ground_truth": "- Automated failover across regional boundaries can introduce latency and consistency issues that applications cannot handle. - Restoring multi-terabyte databases from remote cloud storage is too slow for rapid recovery. - Linear interpolation of replication catch-up time is unreliable; recovery trajectories can follow power decay functions. - Prioritizing data integrity over availability requires clear communication regarding extended recovery timelines.",
+    "source_doc_id": "github_2018_10_21",
+    "company": "GitHub",
+    "date": "2018-10-21",
+    "failure_category": "database",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "github_2018_10_21__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific technical factors contributed to the resource contention within the mysql1 database cluster?",
+    "ground_truth": "Resource contention in the mysql1 database cluster caused by unexpected load spikes, misrouted queries, and insufficient file descriptor limits on ProxySQL nodes.",
+    "source_doc_id": "github_2020_02_19",
+    "company": "GitHub",
+    "date": "2020-02-19",
+    "failure_category": "database",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "github_2020_02_19__root_cause"
+    ]
+  },
+  {
+    "question": "What specific operational changes were implemented to improve the reliability of ZooKeeper and Kafka cluster maintenance?",
+    "ground_truth": "- Updated ZooKeeper provisioning checklist - Plan to introduce automation for ZooKeeper and Kafka cluster maintenance",
+    "source_doc_id": "github_2020_10_09",
+    "company": "GitHub",
+    "date": "2020-10-09",
+    "failure_category": "messaging",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "github_2020_10_09__remediation"
+    ]
+  },
+  {
+    "question": "How can we improve our incident response speed and system availability by enhancing our observability tools and diversifying our database replica infrastructure?",
+    "ground_truth": "- Need for better triage documentation and dashboards - Importance of multi-region/multi-AZ replicas for resilience",
+    "source_doc_id": "github_2021_05_08",
+    "company": "GitHub",
+    "date": "2021-05-08",
+    "failure_category": "database",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "github_2021_05_08__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific database operation triggered the semaphore deadlock that initiated the cascading crash-recovery loop on the read replicas?",
+    "ground_truth": "A schema migration on a large MySQL table triggered a semaphore deadlock on read replicas, causing a cascading crash-recovery loop that exhausted available production capacity.",
+    "source_doc_id": "github_2021_11_27",
+    "company": "GitHub",
+    "date": "2021-11-27",
+    "failure_category": "database",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "github_2021_11_27__root_cause"
+    ]
+  },
+  {
+    "question": "What steps should be taken to recover from a faulty configuration change?",
+    "ground_truth": "- Reverted configuration change - Performed gradual failover",
+    "source_doc_id": "github_2023_05_09",
+    "company": "GitHub",
+    "date": "2023-05-09",
+    "failure_category": "config",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "github_2023_05_09__remediation"
+    ]
+  },
+  {
+    "question": "How can we implement more granular workload isolation and enhance our monitoring strategy to prevent similar configuration-driven failures from impacting system-wide stability?",
+    "ground_truth": "- Need for better workload isolation - Improved detection via alerts and health checks",
+    "source_doc_id": "github_2024_07_05",
+    "company": "GitHub",
+    "date": "2024-07-05",
+    "failure_category": "config",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "github_2024_07_05__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific configuration change resulted in the database hosts failing their health checks and becoming inaccessible to the application?",
+    "ground_truth": "An erroneous configuration change caused database hosts to fail health checks, rendering the read-only database endpoint inaccessible to the application.",
+    "source_doc_id": "github_2024_08_14",
+    "company": "GitHub",
+    "date": "2024-08-14",
+    "failure_category": "config",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "github_2024_08_14__root_cause"
+    ]
+  },
+  {
+    "question": "What temporary measures can be implemented to bypass DNS resolution issues while restoring core site functionality?",
+    "ground_truth": "- Deployed temporary DNS resolution capabilities to the degraded site - Restored original functionality within the site",
+    "source_doc_id": "github_2024_10_11",
+    "company": "GitHub",
+    "date": "2024-10-11",
+    "failure_category": "dependency",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "github_2024_10_11__remediation"
+    ]
+  },
+  {
+    "question": "How can we implement robust validation gates and architectural isolation to prevent configuration-driven cascading failures and circular dependencies?",
+    "ground_truth": "- Circular dependencies between provisioning systems and infrastructure services can lead to catastrophic data corruption - Inadequate validation of automated configuration changes can cause cascading failures - Resource exhaustion in one layer (DNS) can trigger secondary failures in dependent layers (fileservers) if proper isolation is missing",
+    "source_doc_id": "github_2025_01_08",
+    "company": "GitHub",
+    "date": "2025-01-08",
+    "failure_category": "config",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "github_2025_01_08__lessons_learned"
+    ]
+  },
+  {
+    "question": "What combination of traffic patterns and configuration changes led to the core database cluster becoming overloaded?",
+    "ground_truth": "A core database cluster became overloaded due to a combination of increased read traffic from client-side application updates and a cache TTL change that increased write volume.",
+    "source_doc_id": "github_2025_02_09",
+    "company": "GitHub",
+    "date": "2025-02-09",
+    "failure_category": "database",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "github_2025_02_09__root_cause"
+    ]
+  },
+  {
+    "question": "What specific actions were taken to mitigate the impact of the database incident and restore service?",
+    "ground_truth": "- Paused Dependabot queues - Rerouted traffic to healthy clusters - Restarted failed jobs - Added new monitors and alerts",
+    "source_doc_id": "github_2026_02_02",
+    "company": "GitHub",
+    "date": "2026-02-02",
+    "failure_category": "database",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "github_2026_02_02__remediation"
+    ]
+  },
+  {
+    "question": "How can we evolve our monitoring thresholds and automated response playbooks to defend against non-volumetric packet-based attacks?",
+    "ground_truth": "- Monitoring was tuned for volumetric bandwidth attacks and failed to detect high packets-per-second attacks - Lack of pre-configured countermeasures for specific attack vectors increased time-to-mitigation - Need for regular controlled attack simulations to test mitigation tools",
+    "source_doc_id": "github_2026_03_11",
+    "company": "GitHub",
+    "date": "2026-03-11",
+    "failure_category": "network",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "github_2026_03_11__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific failure occurred in the mysql1 cluster that led to the exhaustion of database proxy connections?",
+    "ground_truth": "Resource contention in the mysql1 cluster due to peak load and poor query performance caused database proxy connection exhaustion.",
+    "source_doc_id": "github_2026_03_16",
+    "company": "GitHub",
+    "date": "2026-03-16",
+    "failure_category": "database",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "github_2026_03_16__root_cause"
+    ]
+  },
+  {
+    "question": "What specific technical failure or event served as the root cause for the downtime of the affected services?",
+    "ground_truth": "The provided text does not contain details regarding the root cause of the downtime.",
+    "source_doc_id": "gitlab_2014_07_08",
+    "company": "GitLab",
+    "date": "2014-07-08",
+    "failure_category": "unknown",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "gitlab_2014_07_08__root_cause"
+    ]
+  },
+  {
+    "question": "How can we implement automated verification of backup integrity and monitoring systems to ensure that failures are detected and addressed before a critical recovery scenario occurs?",
+    "ground_truth": "- Losing production data is unacceptable and requires robust recovery procedures. - Backups were failing silently due to pg_dump version mismatch and DMARC issues preventing email notifications. - Lack of clear documentation for pg_basebackup behavior led to confusion during replication recovery. - The primary database setup was a single point of failure. - Slow recovery infrastructure (Azure classic, network disks) significantly prolonged restoration time. - Public monitoring systems were not able to handle the load during the outage. - The importance of regularly testing and validating recovery procedures. - Need for clearer identification of production vs. staging environments to prevent operational mistakes. - Importance of ownership for disaster recovery procedures across all infrastructure components.",
+    "source_doc_id": "gitlab_2017_01_31",
+    "company": "GitLab",
+    "date": "2017-01-31",
+    "failure_category": "database",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "gitlab_2017_01_31__lessons_learned"
+    ]
+  },
+  {
+    "question": "Which specific technical failures prevented the restoration of the primary database from existing backups after the accidental deletion?",
+    "ground_truth": "A team member accidentally deleted the primary PostgreSQL database's data while attempting to fix replication issues on a secondary server. This was compounded by issues with database replication, incorrect PostgreSQL binary versions preventing SQL dumps, and older backups being cleaned.",
+    "source_doc_id": "gitlab_2017_02_01",
+    "company": "GitLab",
+    "date": "2017-02-01",
+    "failure_category": "database",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "gitlab_2017_02_01__root_cause"
+    ]
+  },
+  {
+    "question": "What automated actions and investigations are required to prevent data contamination and handle large repository performance issues during server configuration?",
+    "ground_truth": "- Restart GitLab automatically when configuring a server as master to prevent use of staging data - Investigate large repository handling",
+    "source_doc_id": "gitlab_news_ycombinator_com_item_id_8",
+    "company": "GitLab",
+    "date": null,
+    "failure_category": "compute",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "gitlab_news_ycombinator_com_item_id_8__remediation"
+    ]
+  },
+  {
+    "question": "How can we refine our cluster configuration and testing practices to ensure automated failover remains reliable while maintaining operational readiness through manual intervention?",
+    "ground_truth": "- Complex Pacemaker configurations can lead to unpredictable behavior during failure scenarios. - Fault injection and chaos engineering are necessary to uncover edge-case misconfigurations. - Automation can lead to knowledge atrophy; manual runbooks must be regularly exercised. - Negative colocation constraints can interfere with cluster promotion logic.",
+    "source_doc_id": "gocardless_2017_10_10",
+    "company": "GoCardless",
+    "date": "2017-10-10",
+    "failure_category": "database",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "gocardless_2017_10_10__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific input caused the malware list update to incorrectly flag the root URL as malicious?",
+    "ground_truth": "A human error occurred during a malware list update where the root URL '/' was mistakenly added to the blocklist, causing all search results to be flagged as malicious.",
+    "source_doc_id": "google_2009_01_31",
+    "company": "Google",
+    "date": "2009-01-31",
+    "failure_category": "config",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "google_2009_01_31__root_cause"
+    ]
+  },
+  {
+    "question": "What specific measures should be implemented to prevent and detect errors in configuration generation systems?",
+    "ground_truth": "- Correct the bug in the configuration generator - Audit other critical configuration generation systems - Add input validation checks for configurations - Add targeted monitoring for faster detection and diagnosis",
+    "source_doc_id": "google_2013_01_24",
+    "company": "Google",
+    "date": "2013-01-24",
+    "failure_category": "config",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "google_2013_01_24__remediation"
+    ]
+  },
+  {
+    "question": "How can we modify our background job architecture to ensure state atomicity and prevent race conditions when execution time exceeds the scheduled interval?",
+    "ground_truth": "- Small-scale tests did not account for execution duration exceeding the cron interval. - State management for background jobs must be atomic to prevent duplicate processing.",
+    "source_doc_id": "google_2014_03_01",
+    "company": "Google",
+    "date": "2014-03-01",
+    "failure_category": "config",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "google_2014_03_01__lessons_learned"
+    ]
+  },
+  {
+    "question": "Why did the storage systems fail to maintain data integrity after the power loss caused by the lightning strikes?",
+    "ground_truth": "Four successive lightning strikes on the local utility grid caused a power loss to storage systems, leading to battery drain and unrecoverable data loss for some recently written data.",
+    "source_doc_id": "google_2015_08_13",
+    "company": "Google",
+    "date": "2015-08-13",
+    "failure_category": "storage",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "google_2015_08_13__root_cause"
+    ]
+  },
+  {
+    "question": "What validation processes should be implemented to ensure network configuration changes do not inadvertently exclude necessary IP blocks?",
+    "ground_truth": "- Monitor targeted GCE network paths to detect changes or failures. - Compare IP block announcements before and after configuration changes. - Implement semantic checks for network configurations to ensure they contain specific Cloud IP blocks.",
+    "source_doc_id": "google_2016_04_11",
+    "company": "Google",
+    "date": "2016-04-11",
+    "failure_category": "network",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "google_2016_04_11__remediation"
+    ]
+  },
+  {
+    "question": "How can we modify our configuration deployment strategy and canary timeout settings to prevent global outages caused by rarely used settings?",
+    "ground_truth": "- Rarely used configurations can expose hidden performance bottlenecks in canary deployments - Global propagation of configuration changes creates a single point of failure - Canary timeouts should be tuned to degrade performance rather than halt operations entirely",
+    "source_doc_id": "google_2017_01_30",
+    "company": "Google",
+    "date": "2017-01-30",
+    "failure_category": "network",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "google_2017_01_30__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific failure in the master server's access to the distributed file system triggered the reversion of load balancer configurations and subsequent CPU exhaustion on Google Frontend servers?",
+    "ground_truth": "A master server lost access to the distributed file system, causing it to revert load balancer configurations to an outdated state, which triggered excessive garbage collection and CPU exhaustion on Google Frontend servers.",
+    "source_doc_id": "google_2017_04_05",
+    "company": "Google",
+    "date": "2017-04-05",
+    "failure_category": "config",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "google_2017_04_05__root_cause"
+    ]
+  },
+  {
+    "question": "What immediate actions and long-term architectural improvements can be implemented to mitigate and prevent service overloads caused by faulty configuration changes?",
+    "ground_truth": "- Stopped the job responsible for the configuration change - Manually reduced traffic levels to the blob service to allow task recovery - Improve isolation between storage service regions - Enhance ability to quickly provision resources during cascading failures - Implement software measures to prevent configuration changes that cause system overload - Improve load shedding behavior of the metadata storage system",
+    "source_doc_id": "google_2019_03_12",
+    "company": "Google",
+    "date": "2019-03-12",
+    "failure_category": "config",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "google_2019_03_12__remediation"
+    ]
+  },
+  {
+    "question": "How can we harden our network control plane architecture and emergency tooling to ensure system recovery remains possible during a catastrophic, multi-site configuration failure?",
+    "ground_truth": "- Defense in depth must be hardened to prevent single software bugs from impacting multiple physical locations. - Network control plane configuration must be persistent to allow for rapid recovery. - Emergency tooling must be robust enough to function during network congestion events. - Disaster recovery testing must include scenarios involving catastrophic control plane loss.",
+    "source_doc_id": "google_2019_06_02",
+    "company": "Google",
+    "date": "2019-06-02",
+    "failure_category": "network",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "google_2019_06_02__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific configuration threshold was triggered by the surge in the backend message delivery workload?",
+    "ground_truth": "An unexpected surge in workload for the backend message delivery mechanism hit a configuration threshold, causing degraded livestream performance.",
+    "source_doc_id": "google_2021_10_25",
+    "company": "Google",
+    "date": "2021-10-25",
+    "failure_category": "config",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "google_2021_10_25__root_cause"
+    ]
+  },
+  {
+    "question": "What specific actions were taken to mitigate the vulnerability and prevent the issue from recurring?",
+    "ground_truth": "- Disabled the vulnerable code path - Implemented a root cause fix to prevent recurrence",
+    "source_doc_id": "google_2021_11_12",
+    "company": "Google",
+    "date": "2021-11-12",
+    "failure_category": "network",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "google_2021_11_12__remediation"
+    ]
+  },
+  {
+    "question": "How can we enhance our configuration validation and rollout procedures to detect subtle, timing-dependent race conditions before they propagate to production?",
+    "ground_truth": "- Race conditions in configuration pipelines can persist for months without triggering until specific timing conditions are met - Existing validation checks were insufficient to catch the specific corruption produced by this race condition - Gradual rollouts of patches are necessary but must be monitored for edge cases that bypass existing safeguards",
+    "source_doc_id": "google_2021_11_16",
+    "company": "Google",
+    "date": "2021-11-16",
+    "failure_category": "config",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "google_2021_11_16__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific hardware failure in the production backbone triggered the suboptimal rerouting of traffic during the network topology augmentation?",
+    "ground_truth": "A hardware failure on an optical component in the production backbone reduced bandwidth, forcing traffic to reroute through a less optimal path during a period of network topology augmentation.",
+    "source_doc_id": "google_2022_05_20",
+    "company": "Google",
+    "date": "2022-05-20",
+    "failure_category": "network",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "google_2022_05_20__root_cause"
+    ]
+  },
+  {
+    "question": "What is the standard procedure for reversing a failed configuration rollout in the network?",
+    "ground_truth": "- Halt the ongoing rollout - Perform a global rollback of the problematic configuration",
+    "source_doc_id": "google_2022_07_14",
+    "company": "Google",
+    "date": "2022-07-14",
+    "failure_category": "network",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "google_2022_07_14__remediation"
+    ]
+  },
+  {
+    "question": "How can we improve our traffic routing and testing protocols to ensure regional services remain resilient during large-scale zonal outages?",
+    "ground_truth": "- Regional services must be resilient to single-zone failures even during extreme environmental conditions - Traffic routing modifications must be carefully scoped to avoid impacting healthy zones - Automated recovery procedures require better testing for large-scale zonal outages",
+    "source_doc_id": "google_2022_07_19",
+    "company": "Google",
+    "date": "2022-07-19",
+    "failure_category": "compute",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "google_2022_07_19__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific internal service malfunction caused the excessive volume of requests that triggered global rate limiting on the Filestore API?",
+    "ground_truth": "An internal Google service malfunctioned and sent an excessive volume of requests to the Filestore API, triggering global rate limiting (throttling) that blocked read-only API operations for customers.",
+    "source_doc_id": "google_2022_09_13",
+    "company": "Google",
+    "date": "2022-09-13",
+    "failure_category": "capacity",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "google_2022_09_13__root_cause"
+    ]
+  },
+  {
+    "question": "What specific technical actions were taken to resolve the cascading deadlock and restore frontend service stability?",
+    "ground_truth": "- Restarted stuck frontend instances - Fixed bug in internal RPC library - Fixed bug in Write API causing cascading deadlock - Deployed additional automation for load balancing based on concurrent connections",
+    "source_doc_id": "google_2022_10_13",
+    "company": "Google",
+    "date": "2022-10-13",
+    "failure_category": "dependency",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "google_2022_10_13__remediation"
+    ]
+  },
+  {
+    "question": "What specific automated safeguards and architectural patterns can be implemented to prevent accidental resource deletion and ensure rapid recovery during configuration-related incidents?",
+    "ground_truth": "- Robust and resilient architectural approaches are essential for rapid recovery - Human-in-the-loop and automated safeguards are critical for preventing unintended resource deletion - Partnering closely with customers is essential to rapid recovery",
+    "source_doc_id": "google_cloud_2024_05_08",
+    "company": "Google Cloud",
+    "date": "2024-05-08",
+    "failure_category": "config",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "google_cloud_2024_05_08__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific code defect in the Service Control system failed to handle the blank fields introduced by the automated quota policy update?",
+    "ground_truth": "A code change in the Service Control system lacked proper error handling for null pointers, which was triggered globally by an automated quota policy update containing unintended blank fields.",
+    "source_doc_id": "google_cloud_2025_06_12",
+    "company": "Google Cloud",
+    "date": "2025-06-12",
+    "failure_category": "config",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "google_cloud_2025_06_12__root_cause"
+    ]
+  },
+  {
+    "question": "What was the primary technical factor that prevented the identification of a specific production incident or root cause?",
+    "ground_truth": "The provided text is a marketing and documentation overview of Google Cloud Observability services and does not contain a record of a production incident or post-mortem.",
+    "source_doc_id": "google_cloud_www_stackdriver_com_",
+    "company": "Google Cloud",
+    "date": null,
+    "failure_category": "unknown",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "google_cloud_www_stackdriver_com___root_cause"
+    ]
+  },
+  {
+    "question": "What specific technical failure or incident triggered the need for this documentation review?",
+    "ground_truth": "The provided text is a marketing and documentation overview of Google Cloud Observability services and does not contain a record of a production incident or post-mortem.",
+    "source_doc_id": "google_cloud_www_stackdriver_com_post_morte",
+    "company": "Google Cloud",
+    "date": null,
+    "failure_category": "unknown",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "google_cloud_www_stackdriver_com_post_morte__root_cause"
+    ]
+  },
+  {
+    "question": "What was the root cause of the incident?",
+    "ground_truth": "The provided text does not contain information regarding a production incident or post-mortem.",
+    "source_doc_id": "google_www_youtube_com_watch_v_msXRFJ",
+    "company": "Google",
+    "date": null,
+    "failure_category": "unknown",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "google_www_youtube_com_watch_v_msXRFJ__root_cause"
+    ]
+  },
+  {
+    "question": "How can we automate the synchronization of configuration updates and code deployments to prevent deployment errors?",
+    "ground_truth": "- Merge the two steps of updating configuration variables and deploying code into a single automated step - Add a safeguard to provide a warning if code deployment is attempted while configuration variables are out of sync",
+    "source_doc_id": "heroku_2020_09_03",
+    "company": "Heroku",
+    "date": "2020-09-03",
+    "failure_category": "config",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "heroku_2020_09_03__remediation"
+    ]
+  },
+  {
+    "question": "What specific technical failure or underlying mechanism caused the incident described in the documentation?",
+    "ground_truth": "The provided text contains engineering blog posts and announcements but does not describe a specific production incident or post-mortem.",
+    "source_doc_id": "heroku_engineering_heroku_com_blogs_2",
+    "company": "Heroku",
+    "date": null,
+    "failure_category": "unknown",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "heroku_engineering_heroku_com_blogs_2__root_cause"
+    ]
+  },
+  {
+    "question": "What specific credential was compromised and where was it sourced from to facilitate the unauthorized access?",
+    "ground_truth": "A GitHub personal access token with elevated scopes was leaked from the Homebrew Jenkins instance.",
+    "source_doc_id": "homebrew_2018_07_31",
+    "company": "Homebrew",
+    "date": "2018-07-31",
+    "failure_category": "config",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "homebrew_2018_07_31__root_cause"
+    ]
+  },
+  {
+    "question": "What specific scaling actions and infrastructure migrations are required to resolve a capacity-related incident involving Kafka and retriever instances?",
+    "ground_truth": "- Vertical scaling of Kafka cluster for network capacity - Horizontal scaling of retriever instances - Correction of runbook configuration typos - Migration of services to EKS",
+    "source_doc_id": "honeycomb_2021_09_16",
+    "company": "Honeycomb",
+    "date": "2021-09-16",
+    "failure_category": "capacity",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "honeycomb_2021_09_16__remediation"
+    ]
+  },
+  {
+    "question": "How can we implement more rigorous verification processes and monitoring for host-level performance to ensure trigger evaluations remain reliable?",
+    "ground_truth": "- Underlying host performance issues can cause non-transient trigger evaluation delays - Need to confirm root cause factors more solidly before marking incident as resolved",
+    "source_doc_id": "honeycomb_2022_08_01",
+    "company": "Honeycomb",
+    "date": "2022-08-01",
+    "failure_category": "compute",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "honeycomb_2022_08_01__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific query pattern caused the degradation and failure rates in the query engine?",
+    "ground_truth": "The query engine experienced performance degradation and elevated failure rates due to a costly query pattern that overwhelmed system capacity.",
+    "source_doc_id": "honeycomb_2022_08_03",
+    "company": "Honeycomb",
+    "date": "2022-08-03",
+    "failure_category": "capacity",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "honeycomb_2022_08_03__root_cause"
+    ]
+  },
+  {
+    "question": "What measures can be taken to mitigate resource contention and stabilize compute clusters during a scaling event or deployment?",
+    "ground_truth": "- Implemented cache pre-filling on boot to reduce contention - Reduced contention on the cache hot path - Added more hosts to the Refinery cluster - Pinned build artifacts to prevent unintended deployments",
+    "source_doc_id": "honeycomb_2022_09_08",
+    "company": "Honeycomb",
+    "date": "2022-09-08",
+    "failure_category": "compute",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "honeycomb_2022_09_08__remediation"
+    ]
+  },
+  {
+    "question": "How can we refine our deployment and rollback procedures to ensure that feature flags and shared cache dependencies do not mask failure states or prevent the resolution of state-dependent bugs during an incident?",
+    "ground_truth": "- Database failover is the fastest recovery method for rare internal lockups - Feature flags can hide bugs when deployment mechanisms mask the failure state - Complex dependencies between shared caches and databases can create cascading failures - Suspending deployments during an investigation can inadvertently prevent the resolution of state-dependent bugs",
+    "source_doc_id": "honeycomb_2023_07_25",
+    "company": "Honeycomb",
+    "date": "2023-07-25",
+    "failure_category": "database",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "honeycomb_2023_07_25__lessons_learned"
+    ]
+  },
+  {
+    "question": "What was the technical cause of the incident given that the provided documentation consisted only of an unreadable binary PDF file?",
+    "ground_truth": "The provided document is a binary PDF file containing no readable incident post-mortem text.",
+    "source_doc_id": "how_stuff_mit_edu_afs_athena_cours",
+    "company": "How",
+    "date": null,
+    "failure_category": "unknown",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "how_stuff_mit_edu_afs_athena_cours__root_cause"
+    ]
+  },
+  {
+    "question": "What configuration changes are required to ensure system time synchronization handles a leap second event?",
+    "ground_truth": "- Update system time synchronization configurations to handle the leap second event",
+    "source_doc_id": "iers_2016_07_06",
+    "company": "IERS",
+    "date": "2016-07-06",
+    "failure_category": "config",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "iers_2016_07_06__remediation"
+    ]
+  },
+  {
+    "question": "How can we architect our application processes and error-handling patterns to ensure that background goroutine failures do not impact user-facing traffic or result in the loss of critical crash logs?",
+    "ground_truth": "- Go goroutines do not inherit panic recovery from parent goroutines - Logging stacktraces for many goroutines can cause log buffering and loss of critical crash data - Separating web and worker processes prevents background task failures from impacting user-facing traffic",
+    "source_doc_id": "incident_io_2022_11_18",
+    "company": "incident.io",
+    "date": "2022-11-18",
+    "failure_category": "compute",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "incident_io_2022_11_18__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific external dependency failure prevented internal deployment pipelines from functioning during the AWS outage?",
+    "ground_truth": "A major AWS outage caused cascading failures in third-party dependencies (SAML, transcription, telecom) and blocked internal deployment pipelines due to a hard dependency on Docker Hub.",
+    "source_doc_id": "incident_io_2025_10_20",
+    "company": "incident.io",
+    "date": "2025-10-20",
+    "failure_category": "dependency",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "incident_io_2025_10_20__root_cause"
+    ]
+  },
+  {
+    "question": "How can we ensure strictly monotonic increments for database IDs if standard sequences fail?",
+    "ground_truth": "- Replaced Postgres sequences with a trigger-based approach using SELECT COALESCE(MAX(external_id), 0) + 1 to ensure strictly monotonic increments.",
+    "source_doc_id": "incident_io_incident_io_blog_one_two_skip_",
+    "company": "incident.io",
+    "date": null,
+    "failure_category": "database",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "incident_io_incident_io_blog_one_two_skip___remediation"
+    ]
+  },
+  {
+    "question": "How can we proactively monitor infrastructure utilization to trigger necessary data migrations before reaching hard system limits?",
+    "ground_truth": "- System limits on hosted database services can cause extended outages - Data migration is required when hitting hard infrastructure limits",
+    "source_doc_id": "instapaper_2017_02_08",
+    "company": "Instapaper",
+    "date": "2017-02-08",
+    "failure_category": "capacity",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "instapaper_2017_02_08__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific filesystem constraint on the legacy RDS instance caused the database to reach its capacity limit?",
+    "ground_truth": "The MySQL database reached a 2TB file size limit imposed by the legacy ext3 filesystem on an RDS instance created from a 2013-era snapshot.",
+    "source_doc_id": "instapaper_2022_02_09",
+    "company": "Instapaper",
+    "date": "2022-02-09",
+    "failure_category": "database",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "instapaper_2022_02_09__root_cause"
+    ]
+  },
+  {
+    "question": "What are the standard mitigation strategies for a hardware-level compute defect involving both physical replacement and software-based workarounds?",
+    "ground_truth": "- Full recall and replacement of affected processors - Software patches to work around the bug - Implementation of formal verification in future CPU design processes",
+    "source_doc_id": "intel_1994_10_24",
+    "company": "Intel",
+    "date": "1994-10-24",
+    "failure_category": "compute",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "intel_1994_10_24__remediation"
+    ]
+  },
+  {
+    "question": "How can we shift our incident investigation processes from seeking a single root cause to identifying systemic factors that build operational resilience?",
+    "ground_truth": "- Human error should be the starting point of an investigation, not the conclusion. - Complex system failures rarely have a single root cause. - Resilience is the ability of a system to adjust its functioning to sustain operations under disturbances. - Optimizing for MTTR is often more effective than optimizing for MTBF. - Safety is improved by studying what goes right, not just what goes wrong.",
+    "source_doc_id": "john_www_kitchensoap_com_2011_04_07",
+    "company": "John",
+    "date": null,
+    "failure_category": "unknown",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "john_www_kitchensoap_com_2011_04_07__lessons_learned"
+    ]
+  },
+  {
+    "question": "How did a manual deployment error result in one of eight servers running legacy code instead of the intended update?",
+    "ground_truth": "A manual deployment error resulted in one of eight servers running legacy 'Power Peg' code instead of the new RLP code, causing an infinite loop of child order generation.",
+    "source_doc_id": "knight_capital_group_2012_08_01",
+    "company": "Knight Capital Group",
+    "date": "2012-08-01",
+    "failure_category": "config",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "knight_capital_group_2012_08_01__root_cause"
+    ]
+  },
+  {
+    "question": "What specific testing strategies and rollback procedures should be implemented to prevent and mitigate issues caused by changes to private attributes?",
+    "ground_truth": "- Reverted the problematic code change - Implementing unit tests for private attributes - Implementing integration tests for private attributes",
+    "source_doc_id": "launchdarkly_2024_09_30",
+    "company": "LaunchDarkly",
+    "date": "2024-09-30",
+    "failure_category": "config",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "launchdarkly_2024_09_30__remediation"
+    ]
+  },
+  {
+    "question": "How can we implement more robust decoupling and adaptive failover strategies to prevent cascading failures and cache-miss traffic spikes during regional service outages?",
+    "ground_truth": "- Regional cloud outages can cause cascading failures if internal systems are not sufficiently decoupled. - Reverting to legacy routing paths with cold caches can lead to traffic spikes that overwhelm infrastructure. - SDKs need built-in failover mechanisms (streaming to polling) to maintain availability during network instability.",
+    "source_doc_id": "launchdarkly_2025_10_20",
+    "company": "LaunchDarkly",
+    "date": "2025-10-20",
+    "failure_category": "dependency",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "launchdarkly_2025_10_20__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific configuration error led to the execution of a local development initialization script against the production database?",
+    "ground_truth": "A database initialization script intended for local development was executed against the production database due to an incorrect environment variable configuration.",
+    "source_doc_id": "leaderboarded_com_2020_10_17",
+    "company": "Leaderboarded.com",
+    "date": "2020-10-17",
+    "failure_category": "config",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "leaderboarded_com_2020_10_17__root_cause"
+    ]
+  },
+  {
+    "question": "What specific actions should be taken to resolve database XID wraparound and disk capacity issues during an incident?",
+    "ground_truth": "- Truncated Search and Url tables to free XIDs - Ran VACUUM on the database - Replaced storage volumes on app servers to address disk space issues - Implemented new alerting for XID wraparound",
+    "source_doc_id": "mandrill_2019_02_04",
+    "company": "Mandrill",
+    "date": "2019-02-04",
+    "failure_category": "database",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "mandrill_2019_02_04__remediation"
+    ]
+  },
+  {
+    "question": "How can we modify our keyboard shortcut implementation process to account for international layout behaviors like AltGr mapping and prevent conflicts with existing technical debt?",
+    "ground_truth": "- Keyboard shortcut overrides can have unintended consequences for international users relying on specific keyboard layouts. - The 'Right Alt' key (AltGr) on Windows is often internally mapped as Ctrl+Alt, which can trigger shortcuts intended for Ctrl+Alt combinations. - Internationalization and localization issues are often rooted in complex, historical technical debt.",
+    "source_doc_id": "medium_medium_com_medium_eng_the_curi",
+    "company": "Medium",
+    "date": null,
+    "failure_category": "config",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "medium_medium_com_medium_eng_the_curi__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific software defect within the Guest Agent led to the failure of certificate creation during the leap day transition?",
+    "ground_truth": "A software bug in the Guest Agent caused certificate creation to fail on leap day, triggering a cascade of server failures and subsequent misconfiguration during recovery.",
+    "source_doc_id": "microsoft_2012_02_29",
+    "company": "Microsoft",
+    "date": "2012-02-29",
+    "failure_category": "compute",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "microsoft_2012_02_29__root_cause"
+    ]
+  },
+  {
+    "question": "What steps should be taken to recover from a configuration-induced infinite loop in the storage front ends?",
+    "ground_truth": "- Reverted the configuration change - Performed a restart of the storage front ends to clear the infinite loop state",
+    "source_doc_id": "microsoft_azure_2014_11_19",
+    "company": "Microsoft Azure",
+    "date": "2014-11-19",
+    "failure_category": "config",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "microsoft_azure_2014_11_19__remediation"
+    ]
+  },
+  {
+    "question": "What was the technical failure that caused the system to provide a general mission description instead of the requested incident post-mortem?",
+    "ground_truth": "The provided text is a general description of Microsoft Research's mission and organizational structure, not a production incident post-mortem.",
+    "source_doc_id": "microsoft_research_research_microsoft_com_en_us_u",
+    "company": "Microsoft Research",
+    "date": null,
+    "failure_category": "unknown",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "microsoft_research_research_microsoft_com_en_us_u__root_cause"
+    ]
+  },
+  {
+    "question": "What specific technical failure caused all Firefox add-ons to become unverifiable and disabled?",
+    "ground_truth": "An intermediate certificate used for signing Firefox add-ons expired, causing all add-ons signed by that certificate to become unverifiable and disabled.",
+    "source_doc_id": "mozilla_2019_05_04",
+    "company": "Mozilla",
+    "date": "2019-05-04",
+    "failure_category": "config",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "mozilla_2019_05_04__root_cause"
+    ]
+  },
+  {
+    "question": "What steps should be taken to ensure certificate expiration issues are proactively identified and that system updates can be deployed independently of existing telemetry infrastructure?",
+    "ground_truth": "- Develop a mechanism for fast updates that is not coupled to Telemetry and Studies - Improve communication and documentation regarding system components - Integrate certificate expiration testing into engineering and QA workflows",
+    "source_doc_id": "mozilla_2019_07_12",
+    "company": "Mozilla",
+    "date": "2019-07-12",
+    "failure_category": "config",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "mozilla_2019_07_12__remediation"
+    ]
+  },
+  {
+    "question": "How can we reduce our reliance on automatic cloud configurations and improve system-level integration testing to proactively identify the impact of upstream infrastructure changes?",
+    "ground_truth": "- Unannounced infrastructure changes by cloud providers can trigger complex, latent bugs. - Using 'Automatic' configuration settings for critical infrastructure creates hidden risks. - Integration testing must cover major protocol changes and intermediate networking layers like viaduct. - System-level tests are necessary to catch bugs that unit tests miss.",
+    "source_doc_id": "mozilla_2022_01_13",
+    "company": "Mozilla",
+    "date": "2022-01-13",
+    "failure_category": "config",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "mozilla_2022_01_13__lessons_learned"
+    ]
+  },
+  {
+    "question": "How did a priority inversion involving a shared resource between high, medium, and low-priority tasks result in the blocking of the high-priority task?",
+    "ground_truth": "A high-priority task was blocked by a low-priority task holding a shared resource, which was then preempted by a medium-priority task, causing a priority inversion.",
+    "source_doc_id": "nasa_1997_07_04",
+    "company": "NASA",
+    "date": "1997-07-04",
+    "failure_category": "compute",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "nasa_1997_07_04__root_cause"
+    ]
+  },
+  {
+    "question": "What systemic improvements should be implemented to ensure accurate data exchange and verification between engineering teams working on mission-critical interfaces?",
+    "ground_truth": "- Implement robust systems engineering and cross-project tracking - Establish formal communication channels between engineering groups - Mandate independent peer reviews for mission-critical navigation teams - Improve training on mission operations and anomaly reporting - Formalize verification and validation processes for technical interfaces",
+    "source_doc_id": "nasa_1999_09_23",
+    "company": "NASA",
+    "date": "1999-09-23",
+    "failure_category": "config",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "nasa_1999_09_23__remediation"
+    ]
+  },
+  {
+    "question": "How can we redesign our scheduling and load-shedding mechanisms to ensure system stability during periods of high CPU utilization?",
+    "ground_truth": "- Restart protection mechanisms can provide unexpected fault tolerance by shedding non-critical load during overloads. - Fixed-interval scheduling (2-second guidance period) creates brittle systems when CPU margins are tight. - Hardware-software interface specifications (ICDs) must be strictly maintained and updated to reflect actual hardware performance. - Over-compensation in control algorithms can lead to instability.",
+    "source_doc_id": "nasa___mit_instrumen_1969_07_20",
+    "company": "NASA / MIT Instrumentation Laboratory",
+    "date": "1969-07-20",
+    "failure_category": "compute",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "nasa___mit_instrumen_1969_07_20__lessons_learned"
+    ]
+  },
+  {
+    "question": "Why was the incident report document provided as an unreadable binary PDF instead of a standard text-based format?",
+    "ground_truth": "The provided document is a PDF file containing binary data and does not contain a readable incident post-mortem report.",
+    "source_doc_id": "north_2024_05_22",
+    "company": "North",
+    "date": "2024-05-22",
+    "failure_category": "unknown",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "north_2024_05_22__root_cause"
+    ]
+  },
+  {
+    "question": "How can we ensure Varnish configuration changes are safely isolated and explicitly defined during routing?",
+    "ground_truth": "- Explicitly set req.backend in the vcl_recv function - Set up a separate Varnish instance for staging configuration changes",
+    "source_doc_id": "npm_2014_01_28",
+    "company": "npm",
+    "date": "2014-01-28",
+    "failure_category": "config",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "npm_2014_01_28__remediation"
+    ]
+  },
+  {
+    "question": "How can we refine our incident response protocols to ensure faster analysis of sub-processor reports and more effective communication during third-party security failures?",
+    "ground_truth": "- Need to move more swiftly to understand implications once summary reports are received - Improve communication processes with sub-processors - Strengthen commitment to security",
+    "source_doc_id": "okta_2022_03_22",
+    "company": "Okta",
+    "date": "2022-03-22",
+    "failure_category": "dependency",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "okta_2022_03_22__lessons_learned"
+    ]
+  },
+  {
+    "question": "How does the cancellation of Asyncio requests in the redis-py library trigger connection corruption and subsequent data leakage across shared connection pools?",
+    "ground_truth": "A bug in the redis-py library caused connection corruption when Asyncio requests were canceled, leading to data leakage between users due to shared connection pooling.",
+    "source_doc_id": "openai_2023_03_20",
+    "company": "OpenAI",
+    "date": "2023-03-20",
+    "failure_category": "dependency",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "openai_2023_03_20__root_cause"
+    ]
+  },
+  {
+    "question": "What specific operational and technical measures were implemented to prevent recurring configuration failures and improve system resiliency?",
+    "ground_truth": "- Stopped adding fluoride to the water supply - Reviewing operational policies - Developing solutions to prevent specific failures - Assessing outage risks and improving system resiliency - Reviewing communication practices",
+    "source_doc_id": "owasa_2017_02_02",
+    "company": "OWASA",
+    "date": "2017-02-02",
+    "failure_category": "config",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "owasa_2017_02_02__remediation"
+    ]
+  },
+  {
+    "question": "How can we implement automated readiness checks and proactive resource monitoring to prevent cascading failures caused by hidden scaling limits in our infrastructure dependencies?",
+    "ground_truth": "- Restarting dependent services without verifying the readiness of upstream orchestration software causes cascading failures. - Scaling issues in third-party libraries can remain hidden until specific load thresholds are met. - Lack of monitoring for critical infrastructure limits (like ZooKeeper node size) prevents proactive mitigation.",
+    "source_doc_id": "platform_sh_2016_08_18",
+    "company": "Platform.sh",
+    "date": "2016-08-18",
+    "failure_category": "dependency",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "platform_sh_2016_08_18__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific technical failure caused the system to return a collection of documentation templates instead of an actual incident report?",
+    "ground_truth": "The provided text is a collection of resources and templates for writing incident post-mortems, not an actual incident report.",
+    "source_doc_id": "postmortem_github_com_dastergon_postmorte",
+    "company": "Postmortem",
+    "date": null,
+    "failure_category": "unknown",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "postmortem_github_com_dastergon_postmorte__root_cause"
+    ]
+  },
+  {
+    "question": "Why was the documentation for the management tool processed as an incident report instead of the actual post-mortem?",
+    "ground_truth": "The provided text is documentation for a tool used to manage a post-mortem corpus, not an incident post-mortem report.",
+    "source_doc_id": "postmortems_app_github_com_icco_postmortems",
+    "company": "postmortems.app",
+    "date": null,
+    "failure_category": "unknown",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "postmortems_app_github_com_icco_postmortems__root_cause"
+    ]
+  },
+  {
+    "question": "How can we standardize design specifications and limit structural complexity to prevent the introduction of critical failure points when implementing new architectural requirements?",
+    "ground_truth": "- Inconsistent measurement standards lead to asymmetrical and unstable structures - Over-engineering components (heavy decks) can negatively impact overall system stability - Lack of experience with new design requirements (two gun decks) increases risk of fundamental design flaws",
+    "source_doc_id": "prx_1628_08_10",
+    "company": "PRX",
+    "date": "1628-08-10",
+    "failure_category": "config",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "prx_1628_08_10__lessons_learned"
+    ]
+  },
+  {
+    "question": "How did the EBS storage volume failure lead to service-wide resource contention on the web servers?",
+    "ground_truth": "A rare failure of an EBS storage volume caused I/O blocking on a file server, which cascaded into service-wide outages due to resource contention on web servers.",
+    "source_doc_id": "pythonanywhere_2020_07_07",
+    "company": "PythonAnywhere",
+    "date": "2020-07-07",
+    "failure_category": "storage",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "pythonanywhere_2020_07_07__root_cause"
+    ]
+  },
+  {
+    "question": "What steps should I follow to diagnose and resolve a CoreDNS resolution failure within the Kubernetes cluster?",
+    "ground_truth": "- Verify DNS resolution: `nslookup <hostname> <dns-server>` from multiple pods - Check CoreDNS pod health in k8s: `kubectl -n kube-system get pods -l k8s-app=kube-dns` - Check CoreDNS logs: `kubectl -n kube-system logs -l k8s-app=kube-dns --tail=100` - Verify ndots configuration \u2014 high ndots causes excessive search domain lookups - Check upstream DNS (Route53, etc.) health and quotas - Verify network policies aren't blocking UDP/53 to kube-dns - Check DNS cache hit rate \u2014 cold start after pod restart causes spike - Temporary: add explicit search domain or use FQDN (trailing dot) to bypass ndots",
+    "source_doc_id": "runbook_dns_resolution_failure",
+    "company": "internal",
+    "date": "",
+    "failure_category": "network",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "runbook_dns_resolution_failure__remediation"
+    ]
+  },
+  {
+    "question": "How can we refine our observability strategy to detect and alert on consumer group performance issues before they result in critical service degradation?",
+    "ground_truth": "- Monitor consumer lag at partition level, not just group level - Alert on lag velocity (rate of increase) not just absolute lag",
+    "source_doc_id": "runbook_kafka_consumer_lag",
+    "company": "internal",
+    "date": "",
+    "failure_category": "messaging",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "runbook_kafka_consumer_lag__lessons_learned"
+    ]
+  },
+  {
+    "question": "Why was the container terminated with an OOMKilled status by the kubelet?",
+    "ground_truth": "Container memory limit exceeded; kubelet kills container with OOMKilled.",
+    "source_doc_id": "runbook_oom_killed_pod",
+    "company": "internal",
+    "date": "",
+    "failure_category": "compute",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "runbook_oom_killed_pod__root_cause"
+    ]
+  },
+  {
+    "question": "What steps should I take to identify and resolve a PostgreSQL connection exhaustion issue?",
+    "ground_truth": "- Check current connections: `SELECT count(*), state FROM pg_stat_activity GROUP BY state` - Kill idle connections: `SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state = 'idle' AND query_start < NOW() - INTERVAL '5 minutes'` - Check PgBouncer pool usage: `SHOW POOLS` in pgbouncer console - Verify `max_connections` setting vs. pool_size configuration - Check for connection leaks: apps not returning connections to pool - Temporarily increase `max_connections` if RDS/instance allows without restart (requires reboot on RDS) - Scale out PgBouncer if it is the bottleneck - Long-term: implement connection pooling at application layer (HikariCP, etc.)",
+    "source_doc_id": "runbook_postgres_connection_exhaustion",
+    "company": "internal",
+    "date": "",
+    "failure_category": "database",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "runbook_postgres_connection_exhaustion__remediation"
+    ]
+  },
+  {
+    "question": "How can we update our monitoring and configuration standards to prevent cache-related memory exhaustion caused by unbounded keys and fragmentation?",
+    "ground_truth": "- Always set TTLs on all cache keys - Monitor memory fragmentation ratio, not just used_memory",
+    "source_doc_id": "runbook_redis_eviction",
+    "company": "internal",
+    "date": "",
+    "failure_category": "storage",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "runbook_redis_eviction__lessons_learned"
+    ]
+  },
+  {
+    "question": "How did the unauthorized access to the Heroku machine account originate?",
+    "ground_truth": "A threat actor gained unauthorized access to a Heroku machine account via an archived GitHub repository, allowing them to exfiltrate OAuth tokens and database credentials.",
+    "source_doc_id": "salesforce_2022_04_13",
+    "company": "Salesforce",
+    "date": "2022-04-13",
+    "failure_category": "dependency",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "salesforce_2022_04_13__root_cause"
+    ]
+  },
+  {
+    "question": "Was the incident caused by a failure to load essential resources or the browser's inability to execute JavaScript?",
+    "ground_truth": "The provided text does not contain a post-mortem report; it is a generic browser error message indicating JavaScript is disabled or a resource failed to load.",
+    "source_doc_id": "shapeshift_www_scribd_com_doc_309574927_S",
+    "company": "Shapeshift",
+    "date": null,
+    "failure_category": "unknown",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "shapeshift_www_scribd_com_doc_309574927_S__root_cause"
+    ]
+  },
+  {
+    "question": "How can we decouple our monitoring infrastructure and refine our autoscaling logic to ensure system stability during extreme traffic surges and network degradation?",
+    "ground_truth": "- Monitoring tools must be architecturally independent of the infrastructure they monitor to avoid circular dependencies. - Rapid traffic spikes after holidays can exceed cloud provider infrastructure scaling limits. - Automated scaling can exacerbate issues during network degradation if not tuned for latency-sensitive dependencies.",
+    "source_doc_id": "slack_2021_01_04",
+    "company": "Slack",
+    "date": "2021-01-04",
+    "failure_category": "network",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "slack_2021_01_04__lessons_learned"
+    ]
+  },
+  {
+    "question": "How did the rolling upgrade of Consul agents trigger a cascading failure in the Vitess database?",
+    "ground_truth": "A rolling upgrade of Consul agents caused cache nodes to be replaced, leading to cache misses that triggered inefficient 'scatter' queries against the Vitess database, resulting in a cascading failure.",
+    "source_doc_id": "slack_2022_02_22",
+    "company": "Slack",
+    "date": "2022-02-22",
+    "failure_category": "database",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "slack_2022_02_22__root_cause"
+    ]
+  },
+  {
+    "question": "What specific technical failure or misconfiguration prevented the system from distinguishing between marketing content and legitimate incident documentation?",
+    "ground_truth": "The provided text is marketing content regarding Slackbot and Slack CRM features, not a production incident post-mortem.",
+    "source_doc_id": "slack_slackhq_com_this_was_not_norma",
+    "company": "Slack",
+    "date": null,
+    "failure_category": "unknown",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "slack_slackhq_com_this_was_not_norma__root_cause"
+    ]
+  },
+  {
+    "question": "How can we implement more rigorous stress testing and dependency monitoring to prevent system-wide failures caused by excessive logging and high-latency service interactions?",
+    "ground_truth": "- Prioritize root cause fixes over temporary mitigations - Excessive logging can cause I/O saturation and system failure - Test backend systems against extreme conditions like high latency - Understand the impact of new service dependencies",
+    "source_doc_id": "spotify_2013_04_27",
+    "company": "Spotify",
+    "date": "2013-04-27",
+    "failure_category": "dependency",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "spotify_2013_04_27__lessons_learned"
+    ]
+  },
+  {
+    "question": "Did the service implement exponential backoff and constrained retry limits for its Redis optimistic transactions to prevent the observed database capacity exhaustion?",
+    "ground_truth": "The customer authentication service (Multipass) entered a harmful feedback loop due to a high retry limit and lack of backoff on Redis optimistic transactions, causing the Redis database to reach capacity.",
+    "source_doc_id": "square_2017_03_16",
+    "company": "Square",
+    "date": "2017-03-16",
+    "failure_category": "dependency",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "square_2017_03_16__root_cause"
+    ]
+  },
+  {
+    "question": "What steps should be taken to remediate and contain an incident involving the accidental exposure of PII in public-facing web pages?",
+    "ground_truth": "- Corrected the bug in the CV rendering view. - Contacted major search engines to suppress or re-index affected pages. - Notified the Internet Archive to suppress affected URLs. - Implemented regular code audits for PII handling. - Established PII identification tagging in codebase and database.",
+    "source_doc_id": "stack_overflow_2016_11_28",
+    "company": "Stack Overflow",
+    "date": "2016-11-28",
+    "failure_category": "config",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "stack_overflow_2016_11_28__remediation"
+    ]
+  },
+  {
+    "question": "What specific technical failure or underlying condition triggered the significantly elevated error rates within the payment processing service?",
+    "ground_truth": "The service experienced significantly elevated error rates resulting in a two-hour outage.",
+    "source_doc_id": "stripe_2019_07_10",
+    "company": "Stripe",
+    "date": "2019-07-10",
+    "failure_category": "unknown",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "stripe_2019_07_10__root_cause"
+    ]
+  },
+  {
+    "question": "Why did the lack of Error Correcting Code (ECC) protection in the S-RAM cache memory chips lead to system crashes when exposed to cosmic rays and alpha particles?",
+    "ground_truth": "Faulty S-RAM cache memory chips in Sun Enterprise servers were susceptible to bit-flips caused by cosmic rays and alpha particles, leading to system crashes due to a lack of Error Correcting Code (ECC) protection.",
+    "source_doc_id": "sun_microsystems_1999_11_01",
+    "company": "Sun Microsystems",
+    "date": "1999-11-01",
+    "failure_category": "compute",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "sun_microsystems_1999_11_01__root_cause"
+    ]
+  },
+  {
+    "question": "What are the specific steps to recover service availability when a runaway log file causes a storage-related incident?",
+    "ground_truth": "- Delete the runaway log file - Restart the Tarsnap service code",
+    "source_doc_id": "tarsnap_2016_07_24",
+    "company": "Tarsnap",
+    "date": "2016-07-24",
+    "failure_category": "storage",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "tarsnap_2016_07_24__remediation"
+    ]
+  },
+  {
+    "question": "What specific technical limitation prevented the extraction of incident details from the provided document?",
+    "ground_truth": "The provided document is a binary PDF file containing non-textual data, making it impossible to extract incident details.",
+    "source_doc_id": "therac_25_sunnyday_mit_edu_papers_therac",
+    "company": "Therac-25",
+    "date": null,
+    "failure_category": "unknown",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "therac_25_sunnyday_mit_edu_papers_therac__root_cause"
+    ]
+  },
+  {
+    "question": "How did the vSphere API password rotation specifically lead to the exhaustion of cluster resources?",
+    "ground_truth": "A password rotation for the vSphere API caused the cleanup service to fail, leading to a massive accumulation of leaked VMs that exhausted cluster resources and exposed a latent misconfiguration in CPU reservations.",
+    "source_doc_id": "travis_ci_2015_08_04",
+    "company": "Travis CI",
+    "date": "2015-08-04",
+    "failure_category": "config",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "travis_ci_2015_08_04__root_cause"
+    ]
+  },
+  {
+    "question": "What actions should be taken to resolve a Docker image pull failure and restore the affected EC2 fleet?",
+    "ground_truth": "- Created missing tag for v2.5.0 on Docker Hub - Performed emergency maintenance to recycle EC2 fleet - Implemented alerting for image pull failures",
+    "source_doc_id": "travis_ci_2017_02_05",
+    "company": "Travis CI",
+    "date": "2017-02-05",
+    "failure_category": "config",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "travis_ci_2017_02_05__remediation"
+    ]
+  },
+  {
+    "question": "What technical controls and procedural workflows can be implemented to prevent accidental database modification and ensure complete system recovery after an operational error?",
+    "ground_truth": "- Production database access should be restricted to read-only for development/debugging - Environment variables like DATABASE_URL should be handled with extreme caution in terminal sessions - Incident response procedures must include immediate shutdown of user-facing applications to prevent data corruption - Post-recovery checklists must include verification of all background services like cron schedulers",
+    "source_doc_id": "travis_ci_2018_03_13",
+    "company": "Travis CI",
+    "date": "2018-03-13",
+    "failure_category": "database",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "travis_ci_2018_03_13__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific mechanism allowed multiple distinct databases to be assigned the same empty backup identifier during the migration process?",
+    "ground_truth": "A migration bug caused databases to be assigned an empty backup identifier, leading them to share a single backup location. When databases scaled to zero and were recreated, they restored from this shared, incorrect location, causing data leaks and data loss.",
+    "source_doc_id": "turso_2023_12_04",
+    "company": "Turso",
+    "date": "2023-12-04",
+    "failure_category": "config",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "turso_2023_12_04__root_cause"
+    ]
+  },
+  {
+    "question": "What protocol should be followed for future Redis-master recoveries to avoid manual restarts?",
+    "ground_truth": "- Replaced the original Redis cluster. - Corrected the Redis-master configuration file. - Disabled manual Redis-master restarts; future recoveries will pivot a slave. - Introduced fail-safes to prevent auto-recharge or account suspension if balances are unavailable. - Updating billing system to validate against double-bookkeeping databases in real-time.",
+    "source_doc_id": "twilio_2013_07_18",
+    "company": "Twilio",
+    "date": "2013-07-18",
+    "failure_category": "database",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "twilio_2013_07_18__remediation"
+    ]
+  },
+  {
+    "question": "What specific technical failure caused the incident described in the document?",
+    "ground_truth": "The provided document is a PDF presentation titled 'AGILE in Financial Services' and does not contain a production incident post-mortem.",
+    "source_doc_id": "unknown_2017_02_22",
+    "company": "unknown",
+    "date": "2017-02-22",
+    "failure_category": "unknown",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "unknown_2017_02_22__root_cause"
+    ]
+  },
+  {
+    "question": "Why did the MySQL configuration setting of innodb_flush_log_at_trx_commit result in data loss during the Multi-AZ failover?",
+    "ground_truth": "The MySQL configuration variable innodb_flush_log_at_trx_commit was set to 2 instead of 1, causing data to be written to binary logs but not flushed to the EBS disk before a Multi-AZ failover, resulting in data loss and replication conflicts.",
+    "source_doc_id": "unknown_2019_12_01",
+    "company": "unknown",
+    "date": "2019-12-01",
+    "failure_category": "database",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "unknown_2019_12_01__root_cause"
+    ]
+  },
+  {
+    "question": "What action was taken with the carrier partner to resolve the filtering issues?",
+    "ground_truth": "- Collaborated with carrier partner to resolve filtering issues",
+    "source_doc_id": "unknown_2021_10_27",
+    "company": "unknown",
+    "date": "2021-10-27",
+    "failure_category": "dependency",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "unknown_2021_10_27__remediation"
+    ]
+  },
+  {
+    "question": "How can we implement asynchronous processing and enhanced connection pool monitoring to prevent database exhaustion caused by cumulative transaction overhead?",
+    "ground_truth": "- Connection pool exhaustion can be caused by the cumulative effect of many small, unnecessary transactions rather than a single slow query - Improved observability (tracking connection pool hold time) is critical for diagnosing intermittent database contention - Asynchronous processing of high-volume webhooks helps protect database resources",
+    "source_doc_id": "unknown_2022_09_16",
+    "company": "unknown",
+    "date": "2022-09-16",
+    "failure_category": "database",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "unknown_2022_09_16__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific component version mismatch led to the iptables-restore failures that corrupted the cluster's networking rules?",
+    "ground_truth": "A Kubernetes version mismatch between kubelet and kube-proxy caused iptables-restore failures, leading to corrupted networking rules across the cluster.",
+    "source_doc_id": "unknown_2023_03_14",
+    "company": "unknown",
+    "date": "2023-03-14",
+    "failure_category": "compute",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "unknown_2023_03_14__root_cause"
+    ]
+  },
+  {
+    "question": "What strategies can be implemented to prevent database lock contention during schema migrations and long-running queries?",
+    "ground_truth": "- Set lock_timeout in migration scripts - Eliminate long-running queries/transactions from application - Run analytics queries against an asynchronously updated replica - Configure log_min_duration_statement and log_lock_waits to identify lock contention - Split schema changes into smaller transactions",
+    "source_doc_id": "unknown_2024_01_01",
+    "company": "unknown",
+    "date": "2024-01-01",
+    "failure_category": "database",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "unknown_2024_01_01__remediation"
+    ]
+  },
+  {
+    "question": "What architectural and procedural changes can be implemented to enforce connection limits, automate configuration management, and ensure multi-region redundancy to prevent cascading database failures?",
+    "ground_truth": "- Connection limits are necessary to prevent a single service from impacting database stability - Human error during manual configuration rollbacks can exacerbate existing issues - Tracking services require multi-region redundancy to improve resilience",
+    "source_doc_id": "unknown_2024_01_12",
+    "company": "unknown",
+    "date": "2024-01-12",
+    "failure_category": "database",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "unknown_2024_01_12__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific technical failure in the cache line creation process led the SLO backfill to repeatedly exhaust AWS Lambda capacity?",
+    "ground_truth": "A recurring backfill process for an SLO with no valid results repeatedly exhausted AWS Lambda capacity, triggered by a lack of cache line creation for invalid SLI results.",
+    "source_doc_id": "unknown_2024_08_01",
+    "company": "unknown",
+    "date": "2024-08-01",
+    "failure_category": "capacity",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "unknown_2024_08_01__root_cause"
+    ]
+  },
+  {
+    "question": "What steps should be taken to resolve database lock contention caused by the PGAudit extension?",
+    "ground_truth": "- Attempted to kill offending PGAudit processes - Restarted the database to release locks - Disabled and removed the PGAudit extension",
+    "source_doc_id": "unknown_2025_04_09",
+    "company": "unknown",
+    "date": "2025-04-09",
+    "failure_category": "database",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "unknown_2025_04_09__remediation"
+    ]
+  },
+  {
+    "question": "How can we optimize connection management and keep-alive settings to prevent infrastructure-level agents like anetd from becoming performance bottlenecks during periods of high connection churn?",
+    "ground_truth": "- High connection churn can saturate GKE Dataplane V2 agents - Infrastructure-level agents (like anetd) can become bottlenecks under specific traffic patterns - Connection pooling and keep-alives are critical for high-throughput GKE environments",
+    "source_doc_id": "unknown_incident_io_blog_clouds_caches",
+    "company": "unknown",
+    "date": null,
+    "failure_category": "compute",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "unknown_incident_io_blog_clouds_caches__lessons_learned"
+    ]
+  },
+  {
+    "question": "How does the Anubis security mechanism function to prevent web scraping?",
+    "ground_truth": "The provided text describes a security mechanism called Anubis used to prevent web scraping, rather than a specific production incident or outage.",
+    "source_doc_id": "unknown_lkml_org_lkml_2009_1_2_373",
+    "company": "unknown",
+    "date": null,
+    "failure_category": "unknown",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "unknown_lkml_org_lkml_2009_1_2_373__root_cause"
+    ]
+  },
+  {
+    "question": "What is the functional purpose of the Anubis security mechanism in the context of web scraping prevention?",
+    "ground_truth": "The provided text describes a security mechanism called Anubis used to prevent web scraping, rather than a specific production incident or outage.",
+    "source_doc_id": "unknown_lkml_org_lkml_2012_7_1_203",
+    "company": "unknown",
+    "date": null,
+    "failure_category": "unknown",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "unknown_lkml_org_lkml_2012_7_1_203__root_cause"
+    ]
+  },
+  {
+    "question": "How can automated installation processes be redesigned to prevent unintended data loss caused by recursive directory deletions and reliance on ambiguous path symlinks?",
+    "ground_truth": "- Installation scripts should never perform recursive deletions without strict path validation - The client should allow users to select installation directories explicitly rather than relying on symlinks",
+    "source_doc_id": "valve_2015_01_16",
+    "company": "Valve",
+    "date": "2015-01-16",
+    "failure_category": "config",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "valve_2015_01_16__lessons_learned"
+    ]
+  },
+  {
+    "question": "What was the underlying technical failure that caused the incident?",
+    "ground_truth": "The provided text is a documentation landing page for incident reporting and does not contain details of a specific production incident.",
+    "source_doc_id": "wikimedia_foundation_wikitech_wikimedia_org_wiki_In",
+    "company": "Wikimedia Foundation",
+    "date": null,
+    "failure_category": "unknown",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "wikimedia_foundation_wikitech_wikimedia_org_wiki_In__root_cause"
+    ]
+  },
+  {
+    "question": "What specific steps should be taken to recover a compromised WordPress instance and prevent future dynamic injection attacks?",
+    "ground_truth": "- Remove all malicious code and injected files - Roll back affected pages to a verified clean state - Harden the WordPress instance - Migrate to Hugo static site generator to eliminate dynamic attack vectors",
+    "source_doc_id": "xubuntu_2025_10_15",
+    "company": "Xubuntu",
+    "date": "2025-10-15",
+    "failure_category": "config",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "xubuntu_2025_10_15__remediation"
+    ]
+  },
+  {
+    "question": "How can we enhance our automated recovery processes and communication protocols to minimize manual intervention and improve stakeholder transparency during network-related outages?",
+    "ground_truth": "- Need better outage communication via regular status updates - Improve retry logic to handle write timeouts without manual intervention - Preserve at least one machine in a bad state before rebooting to allow for root cause analysis",
+    "source_doc_id": "yeller_yellerapp_com_posts_2014_08_04",
+    "company": "Yeller",
+    "date": null,
+    "failure_category": "network",
+    "question_type": "lessons_learned",
+    "relevant_chunk_ids": [
+      "yeller_yellerapp_com_posts_2014_08_04__lessons_learned"
+    ]
+  },
+  {
+    "question": "What specific network connectivity failures between the primary and backup leased lines caused the inability to place orders on the CTCL and trading platform?",
+    "ground_truth": "A primary leased line connection to the NSE exchange failed, and the backup leased line experienced intermittent flapping, preventing order placement.",
+    "source_doc_id": "zerodha_2018_04_12",
+    "company": "Zerodha",
+    "date": "2018-04-12",
+    "failure_category": "network",
+    "question_type": "root_cause",
+    "relevant_chunk_ids": [
+      "zerodha_2018_04_12__root_cause"
+    ]
+  },
+  {
+    "question": "What strategies can be implemented to mitigate system capacity constraints when handling high-volume trade execution?",
+    "ground_truth": "- Limit maximum allowed quantity per order for equity trades to 20,000 - Launch basket orders on Kite to facilitate multiple orders - Refinitiv working on a fix to the OMS to handle high-volume trade execution",
+    "source_doc_id": "zerodha_2019_08_29",
+    "company": "Zerodha",
+    "date": "2019-08-29",
+    "failure_category": "capacity",
+    "question_type": "remediation",
+    "relevant_chunk_ids": [
+      "zerodha_2019_08_29__remediation"
+    ]
+  }
+]

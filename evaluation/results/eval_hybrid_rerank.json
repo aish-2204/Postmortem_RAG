@@ -1,0 +1,44 @@
+{
+  "strategy": "hybrid_rerank",
+  "n_pairs": 3,
+  "top_k": 5,
+  "context_recall": 1.0,
+  "context_precision": 0.2667,
+  "faithfulness": 0.6667,
+  "answer_relevancy": 0.8614,
+  "details": [
+    {
+      "source_doc_id": "amazon_2011_04_29",
+      "question_type": "root_cause",
+      "question": "What specific mechanism caused the secondary network traffic to trigger a re-mirroring storm and subsequent control plane thread exhaustion?",
+      "answer": "The re-mirroring storm and control plane thread exhaustion were caused by a network configuration change that incorrectly routed traffic to a lower-capacity secondary network. This resulted in EBS node isolation, which triggered the subsequent cascading failures.",
+      "ground_truth": "A network configuration change incorrectly routed traffic to a lower-capacity secondary network, causing EBS node isolation and a subsequent re-mirroring storm that exhausted cluster capacity and control plane threads.",
+      "context_recall": 1.0,
+      "context_precision": 0.2,
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.8497
+    },
+    {
+      "source_doc_id": "amazon_2011_08_07",
+      "question_type": "remediation",
+      "question": "What architectural improvements and recovery capabilities can be implemented to enhance the isolation and availability of the EC2 control plane and EBS volumes?",
+      "answer": "To enhance isolation and availability, the architecture should implement dedicated control planes and finer-grained throttling per Availability Zone, alongside improved load balancing for EC2 API management hosts. Recovery capabilities will be strengthened by developing tools to recover EBS volumes directly on servers and adding a holding state for blocks flagged for deletion.",
+      "ground_truth": "- Add redundancy and isolation for PLCs - Implement better load balancing for EC2 API management hosts - Develop further isolation of EC2 control plane components - Create capability to recover EBS volumes directly on servers - Instrument alarms for snapshot cleanup identification process - Add holding state for blocks flagged for deletion - Improve RDS health checks and fix failover software bugs",
+      "context_recall": 1.0,
+      "context_precision": 0.2,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8859
+    },
+    {
+      "source_doc_id": "amazon_2012_12_24",
+      "question_type": "lessons_learned",
+      "question": "How can we implement automated data reconciliation and restrict production access to ensure system resilience and rapid recovery during configuration-related failures?",
+      "answer": "To restrict production access, you should revert persistent developer access and implement per-incident Change Management approval for sensitive configuration data. To ensure resilience, you should implement planned architectural changes that enable control plane workflows to perform automated data reconciliation.",
+      "ground_truth": "- Persistent developer access to production data is a high-risk configuration. - Data recovery processes must be tested and optimized for speed. - Service architecture should be resilient to logical data loss through automated reconciliation.",
+      "context_recall": 1.0,
+      "context_precision": 0.4,
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.8486
+    }
+  ]
+}

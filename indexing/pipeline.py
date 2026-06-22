@@ -45,7 +45,9 @@ def run(full_reindex: bool = False, doc_batch_size: int = _DEFAULT_DOC_BATCH) ->
     client = get_client()
     chunks_to_index = all_chunks
     if not full_reindex:
-        existing_ids = set(get_parents_collection(client).get()["ids"])
+        # Strip "__parent" suffix — stored as "amazon_2017_02_28__parent", compared as "amazon_2017_02_28"
+        raw_ids = get_parents_collection(client).get()["ids"]
+        existing_ids = {i.replace("__parent", "") for i in raw_ids}
         if existing_ids:
             chunks_to_index = [c for c in all_chunks if c.parent_id not in existing_ids]
             skipped = len(all_chunks) - len(chunks_to_index)

@@ -42,8 +42,82 @@ QA_PAIRS_PATH = ROOT / "evaluation" / "results" / "qa_pairs.json"
 RESULTS_DIR   = ROOT / "evaluation" / "results"
 
 _GEN_MODEL = os.getenv("EXTRACTION_MODEL", "models/gemini-3.1-flash-lite")
+_GEN_MODEL_FALLBACKS = [
+    "models/gemini-2.5-flash-lite",
+    "models/gemini-2.5-flash",
+    "models/gemini-3.5-flash",
+]
+_GROQ_MODEL = os.getenv("GROQ_EVAL_MODEL", "llama-3.3-70b-versatile")
 _RATE_LIMIT_WAIT = 60
-_BETWEEN_CALL_SLEEP = 4
+_BETWEEN_CALL_SLEEP = 4        # used for Gemini (conservative)
+_BETWEEN_CALL_SLEEP_GROQ = 1   # Groq is faster; 1s is enough at 30 RPM
+
+# Mutable model state — rotates across Gemini models, then falls back to Groq
+_active_gen_model = _GEN_MODEL
+_use_groq = False  # flips True when all Gemini models exhausted
+
+
+def _rotate_model() -> bool:
+    """Switch to next Gemini fallback, then Groq. Returns False if all exhausted."""
+    global _active_gen_model, _use_groq
+    if _use_groq:
+        return False  # already on last resort
+    if _active_gen_model in _GEN_MODEL_FALLBACKS:
+        idx = _GEN_MODEL_FALLBACKS.index(_active_gen_model)
+        remaining = _GEN_MODEL_FALLBACKS[idx + 1:]
+    else:
+        remaining = _GEN_MODEL_FALLBACKS
+    if remaining:
+        _active_gen_model = remaining[0]
+        print(f"\n  [quota exhausted] switching to {_active_gen_model}")
+        return True
+    # All Gemini models exhausted — switch to Groq
+    groq_key = os.getenv("GROQ_API_KEY", "")
+    if groq_key and groq_key != "...":
+        _use_groq = True
+        print(f"\n  [all Gemini quota exhausted] switching to Groq/{_GROQ_MODEL}")
+        return True
+    return False
+
+
+def _is_daily_quota(e: genai_errors.ClientError) -> bool:
+    return "PerDay" in str(e) or "per_day" in str(e).lower()
+
+
+def _groq_generate(prompt: str, max_tokens: int = 200, temperature: float = 0.1, max_retries: int = 3) -> str:
+    """Generate text via Groq API (OpenAI-compatible), with retry on rate limit."""
+    from groq import Groq
+    from groq import RateLimitError
+    client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+    for attempt in range(max_retries):
+        try:
+            resp = client.chat.completions.create(
+                model=_GROQ_MODEL,
+                messages=[{"role": "user", "content": prompt}],
+                max_tokens=max_tokens,
+                temperature=temperature,
+            )
+            return resp.choices[0].message.content.strip()
+        except RateLimitError:
+            wait = 30 * (attempt + 1)
+            print(f"\n  [Groq rate limit] waiting {wait}s…")
+            time.sleep(wait)
+        except Exception:
+            raise
+    return ""
+
+
+# Lazy-loaded sentence-transformers model for answer relevancy (no API quota)
+_st_model = None
+
+def _get_st_model():
+    global _st_model
+    if _st_model is None:
+        from sentence_transformers import SentenceTransformer
+        print("\n  [embeddings] loading sentence-transformers/all-MiniLM-L6-v2 locally…")
+        _st_model = SentenceTransformer("all-MiniLM-L6-v2")
+    return _st_model
+
 
 Strategy = Literal["dense", "sparse", "hybrid", "hybrid_rerank"]
 
@@ -96,17 +170,31 @@ Answer:"""
 def _generate_answer(client: genai.Client, question: str, contexts: list[str], max_retries: int = 4) -> str:
     context_text = "\n\n---\n\n".join(contexts[:3])
     prompt = _ANSWER_PROMPT.format(question=question, context=context_text)
+    if _use_groq:
+        try:
+            return _groq_generate(prompt, max_tokens=200, temperature=0.1)
+        except Exception:
+            return ""
     for attempt in range(max_retries):
         try:
             resp = client.models.generate_content(
-                model=_GEN_MODEL,
+                model=_active_gen_model,
                 contents=prompt,
                 config=types.GenerateContentConfig(temperature=0.1, max_output_tokens=200),
             )
             return resp.text.strip()
         except genai_errors.ClientError as e:
             if e.code == 429:
-                time.sleep(_RATE_LIMIT_WAIT * (attempt + 1))
+                if _is_daily_quota(e):
+                    if not _rotate_model():
+                        return ""
+                    if _use_groq:
+                        try:
+                            return _groq_generate(prompt, max_tokens=200, temperature=0.1)
+                        except Exception:
+                            return ""
+                else:
+                    time.sleep(_RATE_LIMIT_WAIT * (attempt + 1))
             else:
                 return ""
         except genai_errors.ServerError:
@@ -173,10 +261,16 @@ def compute_faithfulness(
         return 0.0
     context_text = "\n\n---\n\n".join(contexts[:3])
     prompt = _FAITHFULNESS_PROMPT.format(context=context_text, answer=answer)
+    if _use_groq:
+        try:
+            text = _groq_generate(prompt, max_tokens=5, temperature=0.0)
+            return max(0.0, min(1.0, float(text.strip().split()[0])))
+        except Exception:
+            return 0.5
     for attempt in range(max_retries):
         try:
             resp = client.models.generate_content(
-                model=_GEN_MODEL,
+                model=_active_gen_model,
                 contents=prompt,
                 config=types.GenerateContentConfig(temperature=0.0, max_output_tokens=5),
             )
@@ -186,7 +280,17 @@ def compute_faithfulness(
             return 0.5
         except genai_errors.ClientError as e:
             if e.code == 429:
-                time.sleep(_RATE_LIMIT_WAIT * (attempt + 1))
+                if _is_daily_quota(e):
+                    if not _rotate_model():
+                        return 0.5
+                    if _use_groq:
+                        try:
+                            text = _groq_generate(prompt, max_tokens=5, temperature=0.0)
+                            return max(0.0, min(1.0, float(text.strip().split()[0])))
+                        except Exception:
+                            return 0.5
+                else:
+                    time.sleep(_RATE_LIMIT_WAIT * (attempt + 1))
         except genai_errors.ServerError:
             time.sleep(15 * (attempt + 1))
         except Exception:
@@ -194,31 +298,39 @@ def compute_faithfulness(
     return 0.5
 
 
-def compute_answer_relevancy(
-    question: str,
-    answer: str,
-) -> float:
+def compute_answer_relevancy(question: str, answer: str) -> float:
     """
-    Cosine similarity between question embedding and answer embedding.
-    High = answer is topically close to the question.
+    Cosine similarity between question and answer using local sentence-transformers.
+    No API quota — runs entirely on CPU.
     """
-    from indexing.embedder import get_query_embedding
     if not answer:
         return 0.0
     try:
-        q_vec = get_query_embedding(question)
-        a_vec = get_query_embedding(answer)
-        dot = sum(a * b for a, b in zip(q_vec, a_vec))
-        mag_q = sum(x**2 for x in q_vec) ** 0.5
-        mag_a = sum(x**2 for x in a_vec) ** 0.5
-        if mag_q == 0 or mag_a == 0:
-            return 0.0
-        return round(dot / (mag_q * mag_a), 4)
+        model = _get_st_model()
+        vecs = model.encode([question, answer], normalize_embeddings=True)
+        return round(float(vecs[0] @ vecs[1]), 4)
     except Exception:
         return 0.0
 
 
 # ── Main evaluation loop ──────────────────────────────────────────────────────
+
+def _checkpoint_path(strategy: Strategy) -> Path:
+    return RESULTS_DIR / f"eval_{strategy}_checkpoint.json"
+
+
+def _load_checkpoint(strategy: Strategy) -> list[dict]:
+    cp = _checkpoint_path(strategy)
+    if cp.exists():
+        data = json.loads(cp.read_text())
+        print(f"Resuming from checkpoint: {len(data)} pairs already done")
+        return data
+    return []
+
+
+def _save_checkpoint(strategy: Strategy, results: list[dict]) -> None:
+    _checkpoint_path(strategy).write_text(json.dumps(results, indent=2))
+
 
 def evaluate(
     strategy: Strategy = "hybrid_rerank",
@@ -228,6 +340,7 @@ def evaluate(
     """
     Run evaluation for a given retrieval strategy.
     Returns a dict of metric averages + per-pair details.
+    Checkpoints every 10 pairs so interrupted runs can resume.
     """
     client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
@@ -235,19 +348,34 @@ def evaluate(
     if limit:
         pairs = pairs[:limit]
 
-    print(f"\n=== Evaluating strategy: {strategy} ({len(pairs)} pairs) ===")
+    # Resume from checkpoint if available
+    results = _load_checkpoint(strategy)
+    done_ids = {r["source_doc_id"] for r in results}
 
-    results = []
+    print(f"\n=== Evaluating strategy: {strategy} ({len(pairs)} pairs) ===")
+    if done_ids:
+        print(f"  Skipping {len(done_ids)} already-evaluated pairs")
+
     for i, pair in enumerate(pairs):
-        question          = pair["question"]
-        ground_truth      = pair["ground_truth"]
-        source_doc_id     = pair["source_doc_id"]
-        relevant_ids      = pair["relevant_chunk_ids"]
+        source_doc_id = pair["source_doc_id"]
+        if source_doc_id in done_ids:
+            continue
+
+        question     = pair["question"]
+        ground_truth = pair["ground_truth"]
+        relevant_ids = pair["relevant_chunk_ids"]
 
         print(f"  [{i+1}/{len(pairs)}] {source_doc_id[:40]:40s}", end=" ", flush=True)
 
         # 1. Retrieve
-        retrieved = _retrieve(strategy, question, top_k=top_k)
+        try:
+            retrieved = _retrieve(strategy, question, top_k=top_k)
+        except RuntimeError as e:
+            print(f"\n  [SKIP] Retrieval failed ({e}), skipping pair.")
+            continue
+        except Exception as e:
+            print(f"\n  [SKIP] Unexpected retrieval error ({type(e).__name__}: {e}), skipping pair.")
+            continue
         contexts  = [c["text"] for c in retrieved]
 
         # 2. Compute retrieval metrics (no API calls)
@@ -256,11 +384,12 @@ def evaluate(
 
         # 3. Generate answer
         answer = _generate_answer(client, question, contexts)
-        time.sleep(_BETWEEN_CALL_SLEEP)
+        _sleep = _BETWEEN_CALL_SLEEP_GROQ if _use_groq else _BETWEEN_CALL_SLEEP
+        time.sleep(_sleep)
 
         # 4. Faithfulness (LLM judge)
         faith = compute_faithfulness(client, contexts, answer)
-        time.sleep(_BETWEEN_CALL_SLEEP)
+        time.sleep(_sleep)
 
         # 5. Answer relevancy (embedding similarity — uses embedding API)
         relevancy = compute_answer_relevancy(question, answer)
@@ -279,6 +408,11 @@ def evaluate(
 
         print(f"recall={recall:.2f}  prec={precision:.2f}  faith={faith:.2f}  relev={relevancy:.2f}")
 
+        # Checkpoint every 10 pairs
+        if len(results) % 10 == 0:
+            _save_checkpoint(strategy, results)
+            print(f"  [checkpoint] {len(results)} pairs saved")
+
     # Aggregate
     def avg(key):
         return round(sum(r[key] for r in results) / len(results), 4)
@@ -294,9 +428,12 @@ def evaluate(
         "details":            results,
     }
 
-    # Save
+    # Save final + clean up checkpoint
     out_path = RESULTS_DIR / f"eval_{strategy}.json"
     out_path.write_text(json.dumps(summary, indent=2))
+    cp = _checkpoint_path(strategy)
+    if cp.exists():
+        cp.unlink()
     print(f"\nResults saved to {out_path}")
     _print_summary(summary)
     return summary

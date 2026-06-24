@@ -10,6 +10,7 @@ Gracefully degrades to RRF score ordering if COHERE_API_KEY is not set.
 """
 
 import os
+import time
 
 from dotenv import load_dotenv
 
@@ -17,6 +18,7 @@ load_dotenv()
 
 _MODEL = "rerank-english-v3.0"
 _DEFAULT_TOP_N = 5
+_FREE_TIER_MIN_INTERVAL = 6.0  # Cohere trial: 10 RPM → 1 call per 6s
 
 
 class Reranker:
@@ -24,6 +26,7 @@ class Reranker:
         api_key = os.getenv("COHERE_API_KEY", "")
         self._enabled = bool(api_key and api_key != "...")
         self._client = None
+        self._last_call_time: float = 0.0
 
         if self._enabled:
             import cohere
@@ -62,6 +65,11 @@ class Reranker:
 
         texts = [c["text"] for c in candidates]
 
+        # Respect Cohere free-tier 10 RPM limit
+        elapsed = time.time() - self._last_call_time
+        if elapsed < _FREE_TIER_MIN_INTERVAL:
+            time.sleep(_FREE_TIER_MIN_INTERVAL - elapsed)
+
         try:
             response = self._client.rerank(
                 model=_MODEL,
@@ -71,6 +79,7 @@ class Reranker:
                 return_documents=False,  # we already have the text in candidates
             )
 
+            self._last_call_time = time.time()
             reranked = []
             for r in response.results:
                 candidate = candidates[r.index].copy()

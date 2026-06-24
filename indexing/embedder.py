@@ -53,7 +53,10 @@ def _embed_batch_with_retry(
                 time.sleep(wait)
             else:
                 raise
-    raise RuntimeError(f"Embedding failed after {max_retries} retries on rate limit.")
+        except Exception:
+            # Transient network error (e.g. RemoteProtocolError) — retry with backoff
+            time.sleep(15 * (attempt + 1))
+    raise RuntimeError(f"Embedding failed after {max_retries} retries.")
 
 
 def embed_texts(

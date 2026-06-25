@@ -70,6 +70,15 @@ Work through these blocks in order. Test each before moving to the next.
 - [ ] `tests/test_eval_gate.py` — CI RAGAS threshold gates (faithfulness ≥ 0.82, etc.)
 - [ ] Run 20 real incident descriptions end-to-end, log failures
 
+### Week 5 — Observability Stack
+- [ ] Integrate OpenTelemetry tracing — instrument agent nodes (query_analyzer, retriever, reflection, synthesizer)
+- [ ] Add Prometheus metrics — retrieval latency, reflection retry rate, answer length histogram
+- [ ] Wire LangSmith with a real API key — per-run tags: `question_type`, `iterations`, `sufficient`
+- [ ] Add structured JSON logging to each agent node (query, retrieved doc IDs, reflection verdict, latency)
+- [ ] `ui/app.py` — expose agent trace sidebar (node timings, retry count, question_type)
+- [ ] Grafana dashboard (optional) — if self-hosting, visualize Prometheus metrics
+- [ ] Alerting rule — faithfulness drop below 0.80 triggers Slack/email
+
 ### Week 4 — UI + CI/CD + README + Deploy
 - [ ] `ui/app.py` — Streamlit UI (incident input, root cause output, agent trace, confidence score)
 - [ ] `.github/workflows/ci.yml` — lint → unit tests → integration test → RAGAS gate

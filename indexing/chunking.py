@@ -84,6 +84,25 @@ def _split_text(text: str, max_chars: int, overlap: int) -> list[str]:
     return chunks
 
 
+def _doc_context_header(doc: dict) -> str:
+    """
+    One-line identity header prepended to every child chunk.
+    Gives BM25 and dense retrieval the incident identity (company, date, services)
+    so a section chunk can be found by company/date queries, not just by its content.
+
+    e.g. "Amazon | 2017-02-28 | config | services: Amazon S3, EC2, Lambda"
+    """
+    company  = doc.get("company", "unknown")
+    date     = doc.get("date", "")
+    category = doc.get("failure_category", "")
+    services = doc.get("services_affected", [])
+    svc_str  = ", ".join(services[:3]) if isinstance(services, list) else str(services)
+    parts    = [p for p in [company, date, category] if p and p != "unknown"]
+    if svc_str:
+        parts.append(f"services: {svc_str}")
+    return " | ".join(parts)
+
+
 def _base_metadata(doc: dict) -> dict[str, Any]:
     return {
         "company": doc.get("company", "unknown"),
@@ -134,8 +153,10 @@ def chunk_document(doc: dict) -> list[Chunk]:
         if not section_text.strip():
             continue
 
-        # Prefix with section label for better embedding signal
-        labeled = f"[{section_name.upper()}]\n{section_text}"
+        # Prefix with section label + doc identity so every chunk is
+        # retrievable by company/date queries, not just by content keywords
+        ctx     = _doc_context_header(doc)
+        labeled = f"[{section_name.upper()}] {ctx}\n{section_text}"
         splits = _split_text(labeled, _CHILD_MAX_CHARS, _OVERLAP_CHARS)
 
         for j, split in enumerate(splits):

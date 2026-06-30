@@ -7,9 +7,15 @@ class AgentState(TypedDict):
     # Input
     query: str
 
+    # Mode — set by query_analyzer (auto-detected) or by the caller
+    # "qa"             — human asking a natural language question
+    # "incident_match" — external agent sending symptom description
+    mode: str
+
     # Set by query_analyzer
-    question_type: str          # root_cause | remediation | lessons_learned | general
-    metadata_filter: dict | None  # ChromaDB where clause, e.g. {"section": "root_cause"}
+    question_type: str          # qa mode:      root_cause | remediation | lessons_learned | general
+    extracted_symptoms: dict    # incident mode: {failure_category, services_affected, infrastructure_tags, error_codes}
+    metadata_filter: dict | None  # ChromaDB where clause — section_type (qa) or failure_category (incident)
 
     # Set by retriever_node
     retrieved_chunks: list[dict]
@@ -17,11 +23,11 @@ class AgentState(TypedDict):
 
     # Set by self_reflection
     sufficient: bool
-    reflection: str             # LLM explanation of why context is/isn't sufficient
+    reflection: str
 
     # Set by synthesizer
-    answer: str
-    sources: list[str]          # list of source doc IDs cited in the answer
+    answer: str                 # qa: prose answer  |  incident: structured report
+    sources: list[str]
 
     # Loop control
-    iterations: int             # how many retrieval attempts have been made
+    iterations: int

@@ -1,11 +1,4 @@
-"""
-Post-Mortem RAG — Streamlit UI
-
-Layout:
-  Left sidebar  — app info, question type legend
-  Main area     — query input → answer card + sources
-  Expander      — agent trace (node timings, reflection verdict, retry info)
-"""
+"""Post-Mortem RAG — Streamlit UI"""
 
 import time
 
@@ -14,13 +7,17 @@ import streamlit as st
 st.set_page_config(
     page_title="Post-Mortem RAG",
     page_icon="🔍",
-    layout="wide",
+    layout="centered",
 )
 
-# ── Styles ────────────────────────────────────────────────────────────────────
+# ── Hide Streamlit chrome (deploy button, hamburger menu, footer) ─────────────
 
 st.markdown("""
 <style>
+#MainMenu        { visibility: hidden; }
+header           { visibility: hidden; }
+footer           { visibility: hidden; }
+
 .answer-card {
     background: #f0f4ff;
     border-left: 4px solid #4f6ef7;
@@ -28,13 +25,14 @@ st.markdown("""
     border-radius: 6px;
     font-size: 0.97rem;
     line-height: 1.7;
+    color: #1a1a2e !important;
 }
 .source-chip {
     display: inline-block;
-    background: #e8edf9;
-    color: #2d3a6e;
+    background: #dde4f7;
+    color: #1e2d6b !important;
     border-radius: 12px;
-    padding: 2px 10px;
+    padding: 3px 12px;
     margin: 2px 3px;
     font-size: 0.82rem;
     font-family: monospace;
@@ -42,170 +40,174 @@ st.markdown("""
 .trace-row {
     display: flex;
     justify-content: space-between;
-    padding: 4px 0;
-    border-bottom: 1px solid #eee;
+    padding: 5px 0;
+    border-bottom: 1px solid #dee2e6;
     font-size: 0.87rem;
+    color: #1a1a2e !important;
 }
 </style>
 """, unsafe_allow_html=True)
 
-# ── Sidebar ───────────────────────────────────────────────────────────────────
-
-with st.sidebar:
-    st.title("Post-Mortem RAG")
-    st.caption("LangGraph agent over ~200 incident post-mortems")
-    st.markdown("---")
-    st.markdown("""
-**Question types detected automatically:**
-
-| Type | Example |
-|---|---|
-| `root_cause` | *What caused the Cloudflare outage?* |
-| `remediation` | *How did GitHub fix the 2018 outage?* |
-| `lessons_learned` | *What did Stripe learn from their incident?* |
-| `general` | *How long did the AWS S3 outage last?* |
-""")
-    st.markdown("---")
-    st.markdown("""
-**Retrieval strategy:** Hybrid RRF
-**LLM:** Groq llama-3.3-70b-versatile
-**Max retries:** 2
-""")
-    st.markdown("---")
-    st.caption("Week 3 agent · ablation winner: hybrid RRF (faith=0.945)")
-
-
 # ── Example queries ───────────────────────────────────────────────────────────
 
 EXAMPLES = [
-    "What caused the Cloudflare outage in 2019?",
-    "How did GitHub remediate the October 2018 database incident?",
-    "What lessons were learned from the AWS S3 us-east-1 outage?",
+    "What caused the Cloudflare outage in 2020?",
+    "How did AWS remediate the S3 us-east-1 outage?",
+    "What lessons did GitLab learn from their 2017 data loss?",
     "What were the contributing factors to the GitLab data loss incident?",
 ]
 
-# ── Main ──────────────────────────────────────────────────────────────────────
+# ── Header ────────────────────────────────────────────────────────────────────
 
-st.header("Incident Post-Mortem Assistant")
-st.markdown("Ask a question about any incident, outage, or post-mortem in the knowledge base.")
+st.title("Incident Post-Mortem Assistant")
+st.caption("LangGraph agent · Hybrid RRF retrieval · Groq llama-3.3-70b")
 
-# Example buttons
-st.markdown("**Try an example:**")
-cols = st.columns(len(EXAMPLES))
-for col, example in zip(cols, EXAMPLES):
-    if col.button(example[:45] + "…", key=example, use_container_width=True):
-        st.session_state["query_input"] = example
+mode_tab, qa_tab = st.tabs(["Incident Match", "Q&A"])
 
-query = st.text_input(
-    "Your question",
-    key="query_input",
-    placeholder="e.g. What caused the Cloudflare outage in 2019?",
-)
+with mode_tab:
+    st.markdown("Paste current incident symptoms. The agent finds the closest past incident and returns root cause + remediation steps.")
+    INCIDENT_EXAMPLES = [
+        "Kafka consumer lag spike, OOMKill on K8s pods, 502 errors on API gateway",
+        "PostgreSQL connection pool exhausted, high CPU on database nodes, query timeouts",
+        "BGP route withdrawal, DNS resolution failures, global traffic drop",
+        "S3 PUT requests failing, high error rate on upstream services depending on object storage",
+    ]
+    st.markdown("**Examples:**")
+    icols = st.columns(2)
+    for i, ex in enumerate(INCIDENT_EXAMPLES):
+        if icols[i % 2].button(ex[:55] + "…", key=f"inc_{i}", use_container_width=True):
+            st.session_state["incident_input"] = ex
+    incident_query = st.text_area(
+        "Current symptoms",
+        key="incident_input",
+        placeholder="e.g. Kafka consumer lag spike, OOMKill on K8s pods, 502 errors on API",
+        height=100,
+        label_visibility="collapsed",
+    )
+    incident_btn = st.button("Find matching incident", type="primary",
+                             disabled=not incident_query, use_container_width=True,
+                             key="inc_btn")
 
-run_btn = st.button("Ask", type="primary", disabled=not query)
+with qa_tab:
+    st.markdown("Ask a natural language question about any past incident or post-mortem.")
+    QA_EXAMPLES = [
+        "What caused the Cloudflare outage in 2020?",
+        "How did AWS remediate the S3 us-east-1 outage?",
+        "What lessons did GitLab learn from their 2017 data loss?",
+        "What were the contributing factors to the GitLab data loss incident?",
+    ]
+    st.markdown("**Examples:**")
+    qcols = st.columns(2)
+    for i, ex in enumerate(QA_EXAMPLES):
+        if qcols[i % 2].button(ex[:55] + "…", key=f"qa_{i}", use_container_width=True):
+            st.session_state["qa_input"] = ex
+    qa_query = st.text_input(
+        "Your question",
+        key="qa_input",
+        placeholder="e.g. What caused the Cloudflare outage in 2020?",
+        label_visibility="collapsed",
+    )
+    qa_btn = st.button("Ask", type="primary", disabled=not qa_query,
+                       use_container_width=True, key="qa_btn")
+
+query     = (incident_query if incident_btn else qa_query) or ""
+run_btn   = incident_btn or qa_btn
+use_mode  = "incident_match" if incident_btn else "qa"
 
 # ── Run agent ─────────────────────────────────────────────────────────────────
 
 if run_btn and query:
     with st.spinner("Running agent…"):
-        from agents.graph import run as agent_run
-
-        t0 = time.perf_counter()
-
-        # Per-node timing via a thin wrapper — we instrument via state snapshots
-        node_timings: list[dict] = []
-
-        # We'll re-run the graph manually step-by-step to capture per-node timing
         import time as _time
-        from agents.state import AgentState
         from agents.query_analyzer  import query_analyzer
         from agents.retriever_node  import retriever_node
         from agents.self_reflection import self_reflection
         from agents.synthesizer     import synthesizer
+        from agents.graph           import _base_state
 
-        state: dict = {
-            "query":            query,
-            "question_type":    "",
-            "metadata_filter":  None,
-            "retrieved_chunks": [],
-            "parent_docs":      {},
-            "sufficient":       False,
-            "reflection":       "",
-            "answer":           "",
-            "sources":          [],
-            "iterations":       0,
-        }
+        state: dict = _base_state(query, mode=use_mode)
+
+        node_timings: list[dict] = []
 
         def _run_node(name, fn, s):
             t = _time.perf_counter()
-            out = fn(s)
-            elapsed = round(_time.perf_counter() - t, 3)
-            node_timings.append({"node": name, "ms": int(elapsed * 1000)})
-            s.update(out)
+            s.update(fn(s))
+            node_timings.append({"node": name, "ms": int((_time.perf_counter() - t) * 1000)})
 
+        t0 = _time.perf_counter()
         _run_node("query_analyzer",  query_analyzer,  state)
         _run_node("retriever_node",  retriever_node,  state)
         _run_node("self_reflection", self_reflection, state)
 
-        retry_triggered = not state["sufficient"] and state["iterations"] < 2
-        if retry_triggered:
-            _run_node("retriever_node (retry)", retriever_node,  state)
+        if not state["sufficient"] and state["iterations"] < 2:
+            _run_node("retriever_node (retry)",  retriever_node,  state)
             _run_node("self_reflection (retry)", self_reflection, state)
 
         _run_node("synthesizer", synthesizer, state)
+        total_ms = int((_time.perf_counter() - t0) * 1000)
 
-        total_ms = int((time.perf_counter() - t0) * 1000)
+    # ── Metadata row ──────────────────────────────────────────────────────────
+    st.divider()
+
+    QTYPE_LABEL = {
+        "root_cause":      "🔴 root cause",
+        "remediation":     "🟢 remediation",
+        "lessons_learned": "🟡 lessons learned",
+        "general":         "🔵 general",
+    }
+    c1, c2, c3 = st.columns(3)
+    if state.get("mode") == "incident_match":
+        symptoms = state.get("extracted_symptoms", {})
+        c1.metric("Failure category", symptoms.get("failure_category", "—"))
+    else:
+        c1.metric("Question type", QTYPE_LABEL.get(state["question_type"], state["question_type"]))
+    c2.metric("Latency", f"{total_ms} ms")
+    c3.metric("Retrieval passes", state["iterations"])
 
     # ── Answer ────────────────────────────────────────────────────────────────
-    st.markdown("---")
-    qtype_badge = {
-        "root_cause":      "🔴 root_cause",
-        "remediation":     "🟢 remediation",
-        "lessons_learned": "🟡 lessons_learned",
-        "general":         "🔵 general",
-    }.get(state["question_type"], state["question_type"])
-
-    col1, col2, col3 = st.columns([2, 1, 1])
-    col1.markdown(f"**Question type:** {qtype_badge}")
-    col2.metric("Total latency", f"{total_ms} ms")
-    col3.metric("Retrieval iterations", state["iterations"])
-
-    st.markdown("### Answer")
-    st.markdown(
-        f'<div class="answer-card">{state["answer"]}</div>',
-        unsafe_allow_html=True,
-    )
+    if state.get("mode") == "incident_match":
+        st.markdown("#### Incident Match Report")
+        st.code(state["answer"], language=None)
+    else:
+        st.markdown("#### Answer")
+        st.markdown(
+            f'<div class="answer-card">{state["answer"]}</div>',
+            unsafe_allow_html=True,
+        )
 
     # ── Sources ───────────────────────────────────────────────────────────────
     if state["sources"]:
-        st.markdown("### Sources cited")
+        st.markdown("#### Sources")
         chips = " ".join(
             f'<span class="source-chip">{s}</span>' for s in state["sources"]
         )
         st.markdown(chips, unsafe_allow_html=True)
 
     # ── Agent trace ───────────────────────────────────────────────────────────
+    ROW_STYLE  = "display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #dee2e6;font-size:0.87rem;color:#1a1a2e;"
+    BOLD_STYLE = "font-weight:600;color:#1a1a2e;"
+
     with st.expander("Agent trace", expanded=False):
-        st.markdown(f"**Reflection verdict:** {state['reflection']}")
-        st.markdown(f"**Section filter applied:** `{state['metadata_filter']}`")
-        st.markdown(f"**Chunks retrieved (final pass):** {len(state['retrieved_chunks'])}")
-        st.markdown("**Node timings:**")
-        rows_html = ""
-        for t in node_timings:
-            rows_html += (
-                f'<div class="trace-row">'
-                f'<span>{t["node"]}</span>'
-                f'<span><b>{t["ms"]} ms</b></span>'
-                f'</div>'
-            )
+        st.markdown(f"**Reflection:** {state['reflection']}")
+        st.markdown(f"**Section filter:** `{state['metadata_filter']}`")
+
+        st.markdown("**Node timings**")
+        rows_html = "".join(
+            f'<div style="{ROW_STYLE}"><span>{t["node"]}</span>'
+            f'<span style="{BOLD_STYLE}">{t["ms"]} ms</span></div>'
+            for t in node_timings
+        )
         st.markdown(rows_html, unsafe_allow_html=True)
 
-        if state["retrieved_chunks"]:
-            st.markdown("**Top retrieved chunks:**")
-            for i, chunk in enumerate(state["retrieved_chunks"][:3], 1):
-                meta = chunk.get("metadata", {})
-                with st.expander(
-                    f"Chunk {i} — {meta.get('doc_id', 'unknown')} [{meta.get('section', '?')}]",
-                    expanded=False,
-                ):
-                    st.text(chunk["text"][:600])
+        if state["parent_docs"]:
+            st.markdown("**Documents used in answer**")
+            for pid, parent in list(state["parent_docs"].items())[:4]:
+                meta     = parent.get("metadata", {})
+                company  = meta.get("company") or ""
+                date     = meta.get("date") or ""
+                src_url  = meta.get("source_url", "")
+                label    = f"{company} ({date})" if company and company != "unknown" else pid
+                with st.expander(label, expanded=False):
+                    if src_url:
+                        st.caption(src_url)
+                    st.text(parent["text"][:600])

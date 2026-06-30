@@ -80,7 +80,16 @@ class HybridRetriever:
         """
         dense_results = self._dense.retrieve(query, top_k=top_k, metadata_filter=metadata_filter)
         sparse_results = self._sparse.retrieve(query, top_k=top_k)
-        return rrf_fuse(dense_results, sparse_results, top_k=top_k)
+        fused = rrf_fuse(dense_results, sparse_results, top_k=top_k)
+
+        # BM25 has no metadata filter — post-filter fused results to enforce section_type
+        if metadata_filter:
+            fused = [
+                c for c in fused
+                if all(c["metadata"].get(k) == v for k, v in metadata_filter.items())
+            ]
+
+        return fused
 
     def retrieve_with_parents(
         self,
